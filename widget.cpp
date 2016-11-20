@@ -23,8 +23,16 @@ Widget::~Widget()
 //тестовый слот для получения строки адреса и вызова метода get
 void Widget::on_submit_login_clicked()
 {
-    QString str = ui->lineEdit_test->text();
-    vk->getUserInfo(str, ui->login_log);
+    //QString str = ui->lineEdit_test->text();
+    //vk->getUserInfo(str, ui->login_log);
+
+    QString username = ui->login_edit->text();
+    QString pwd = ui->password_edit->text();
+
+    vk->setUsername(username);
+    vk->setPwd(pwd);
+
+    vk->loginVk();
 }
 
 
