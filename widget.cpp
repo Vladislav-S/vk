@@ -1,6 +1,5 @@
-#include "widget.h"
 #include "ui_widget.h"
-
+#include "widget.h"
 //класс окна
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -10,6 +9,10 @@ Widget::Widget(QWidget *parent) :
 
     //инициализируем менеджер доступа к сети
     manager = new QNetworkAccessManager(this);
+    //qDebug() << manager;
+    //потихоньку инкапсулируем функционал
+    vk = new vkConnect();
+    vk->setManager(manager);
 }
 
 Widget::~Widget()
@@ -45,9 +48,48 @@ void Widget::replyFinTest(QNetworkReply  *reply){
     QString  str = QString::fromUtf8(content.data(), content.size());
 
     //выводим текст
-    ui->login_log->setText(str);
+    QString normstr = "";
 
-    //в консоль ещеы
-    qDebug() << str;
+    //преобразуем данные в json тип
+    QJsonObject  jobj  =  ObjectFromString(str);
+
+    //вывод даты
+    normstr += jobj["response"].toArray().at(0).toObject()["bdate"].toString();
+    //normstr += jobj["response"];
+
+    ui->login_log->setText(normstr);
+
+    //в консоль еще
+    //qDebug() << jobj.size() << " " << jobj["response"].toArray().at(0).toObject()["bdate"].toString();
     reply->deleteLater();
+}
+
+
+
+//функция для преобразования строки в json объект
+QJsonObject Widget::ObjectFromString(const QString& in)
+{
+    QJsonObject obj;
+
+    QJsonDocument doc = QJsonDocument::fromJson(in.toUtf8());
+
+    // check validity of the document
+    if(!doc.isNull())
+    {
+        if(doc.isObject())
+        {
+            obj = doc.object();
+        }
+        else
+        {
+            qDebug() << "Document is not an object" << endl;
+        }
+    }
+    else
+    {
+        qDebug() << "Invalid JSON...\n" << in << endl;
+    }
+
+    qDebug() << "function passed " << in << obj << endl;
+    return obj;
 }

@@ -7,6 +7,14 @@
 #include <QNetworkReply>
 #include <QUrl>
 
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonDocument>
+#include <QJsonArray>
+
+#include <QList>
+#include "vkconnect.h"
+
 
 namespace Ui {
 class Widget;
@@ -18,6 +26,7 @@ class Widget : public QWidget
 
 public:
     explicit Widget(QWidget *parent = 0);
+    QJsonObject ObjectFromString(const QString& in);
     ~Widget();
 
 private slots:
@@ -30,6 +39,7 @@ private slots:
 private:
     Ui::Widget *ui;
     QNetworkAccessManager * manager;
+    vkConnect * vk;
 };
 
 #endif // WIDGET_H

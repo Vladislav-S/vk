@@ -13,8 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        widget.cpp
+        widget.cpp \
+    vkconnect.cpp
 
-HEADERS  += widget.h
+HEADERS  += widget.h \
+    vkconnect.h
 
 FORMS    += widget.ui
