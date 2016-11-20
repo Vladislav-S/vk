@@ -26,11 +26,11 @@ class Widget : public QWidget
 
 public:
     explicit Widget(QWidget *parent = 0);
-    QJsonObject ObjectFromString(const QString& in);
+    //QJsonObject ObjectFromString(const QString& in);
     ~Widget();
 
 private slots:
-    void replyFinTest(QNetworkReply *reply);
+    //void replyFinTest(QNetworkReply *reply);
 
     //void replyFinished(const QNetworkReply &reply);
 

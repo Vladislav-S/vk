@@ -7,12 +7,14 @@
 #include <QNetworkReply>
 #include <QUrl>
 
+#include <QEventLoop>
+
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonDocument>
 #include <QJsonArray>
 
-
+#include <QLabel>
 
 class vkConnect: public QObject
 {
@@ -21,14 +23,27 @@ public:
     explicit vkConnect();
     ~vkConnect() = default;
 
+    bool loginVk();
+
+    int setUsername(QString name);
+    int setPwd(QString password);
     int setManager(QNetworkAccessManager *man);
+
+    void getUserInfo(QString _id, QLabel *_label);
 
 private:
     bool connected;
 
     QNetworkAccessManager * manager;
 
-    QString login;
+    QString apiProtocol;
+
+    QString version;
+    QString grantType;
+    QString appSecret;
+    QString appId;
+    QString id;
+    QString username;
     QString pwd;
     QString token;
     QString reply;
