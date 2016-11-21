@@ -14,9 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         widget.cpp \
-    vkconnect.cpp
+    vkconnect.cpp \
+    logindialog.cpp
 
 HEADERS  += widget.h \
-    vkconnect.h
+    vkconnect.h \
+    logindialog.h
 
-FORMS    += widget.ui
+FORMS    += widget.ui \
+    logindialog.ui

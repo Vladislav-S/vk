@@ -6,6 +6,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
+#include <QUrlQuery>
 
 #include <QEventLoop>
 
@@ -21,34 +22,34 @@ class vkConnect: public QObject
     Q_OBJECT
 public:
     explicit vkConnect();
-    ~vkConnect() = default;
+    ~vkConnect();
 
-    bool loginVk();
+    bool isLogin();
 
     int setUsername(QString name);
-    int setPwd(QString password);
     int setManager(QNetworkAccessManager *man);
+
+    QString getUserId();
 
     void getUserInfo(QString _id, QLabel *_label);
 
+public slots:
+    void acceptLogin(QUrlQuery * query);
+
 private:
     bool connected;
-
     QNetworkAccessManager * manager;
 
     QString apiProtocol;
-
     QString version;
-    QString grantType;
-    QString appSecret;
+    QString expires_in;
     QString appId;
     QString id;
     QString username;
-    QString pwd;
     QString token;
-    QString reply;
 
     QJsonObject ObjectFromString(const QString& in);
+    QJsonObject sentRequest(const QString& in);
 
 };
 

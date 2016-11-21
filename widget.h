@@ -12,9 +12,9 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 
-#include <QList>
+//#include <QList>
 #include "vkconnect.h"
-
+#include "logindialog.h"
 
 namespace Ui {
 class Widget;
@@ -26,20 +26,21 @@ class Widget : public QWidget
 
 public:
     explicit Widget(QWidget *parent = 0);
-    //QJsonObject ObjectFromString(const QString& in);
     ~Widget();
 
 private slots:
-    //void replyFinTest(QNetworkReply *reply);
 
-    //void replyFinished(const QNetworkReply &reply);
 
-    void on_submit_login_clicked();
+    void on_button_login_clicked();
 
 private:
+    loginDialog * loginD;
     Ui::Widget *ui;
     QNetworkAccessManager * manager;
     vkConnect * vk;
+
+protected:
+
 };
 
 #endif // WIDGET_H

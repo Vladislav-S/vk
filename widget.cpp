@@ -13,31 +13,29 @@ Widget::Widget(QWidget *parent) :
 
     vk = new vkConnect();
     vk->setManager(manager);
+
+    loginD = new loginDialog();
+    connect(loginD, SIGNAL(sentQUrl(QUrlQuery*)), vk, SLOT(acceptLogin(QUrlQuery*)));
+    connect(loginD, SIGNAL(finished(int)), this, SLOT(on_Widget_destroyed()));
 }
 
 Widget::~Widget()
 {
     delete ui;
+    delete loginD;
+    delete manager;
+    delete vk;
 }
 
-//тестовый слот для получения строки адреса и вызова метода get
-void Widget::on_submit_login_clicked()
+
+void Widget::on_button_login_clicked()
 {
-    //QString str = ui->lineEdit_test->text();
-    //vk->getUserInfo(str, ui->login_log);
-
-    QString username = ui->login_edit->text();
-    QString pwd = ui->password_edit->text();
-
-    vk->setUsername(username);
-    vk->setPwd(pwd);
-
-    vk->loginVk();
+    if(!vk->isLogin()){
+        loginD->exec();
+        QString  id(vk->getUserId());
+        vk->getUserInfo(id, ui->label_current_user);
+    }
+    else{
+        //TODO: sent signal to draw window
+    }
 }
-
-
-/*
-
- connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinTest(QNetworkReply *)));
-
-*/

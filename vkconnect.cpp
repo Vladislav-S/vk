@@ -6,26 +6,39 @@
 vkConnect::vkConnect()
 {
     connected = false;
-    version = "5.60";
-    apiProtocol = "https://api.vk.com/method/";
-    grantType = "password";
-    appSecret = "2FlYYtIFenpnA0OXieBP";
-    appId = "5167666";
+    version = ("5.60");
+    apiProtocol = ("https://api.vk.com/method/");
+    appId = ("5167666");
+
 }
 
-bool vkConnect::loginVk(){
-    if(connected) return true;
-    if(username.isEmpty() || pwd.isEmpty() || version.isEmpty()
-            || appId.isEmpty() || appSecret.isEmpty()
-            || grantType.isEmpty()) return false;
-    QString loginStr = QString("https://oauth.vk.com/token?grant_type=%1&client_id=%2&client_secret=%3&username=%4&password=%5&v=%6");
-    loginStr = loginStr.arg(grantType, appId, appSecret, username, pwd, version);
+vkConnect::~vkConnect(){
 
-    qDebug() << loginStr;
+}
 
-    QUrl url(loginStr);
+void vkConnect::acceptLogin(QUrlQuery *query){
+
+ token = (query->queryItemValue("access_token"));
+ id = (query->queryItemValue("user_id"));
+ expires_in = (query->queryItemValue("expires_in"));
+ connected = true;
+//TODO: emit signal to widget, to give info
+}
+
+
+bool vkConnect::isLogin(){
+    return connected;
+}
+
+QString  vkConnect::getUserId(){
+    return id;
+}
+
+
+
+QJsonObject vkConnect::sentRequest(const QString &in){
+    QUrl url(in);
     QNetworkRequest request(url);
-
     QNetworkReply* reply = manager->get(request);
 
     QEventLoop loop;
@@ -35,50 +48,31 @@ bool vkConnect::loginVk(){
     if(reply->error() != QNetworkReply::NoError){
         qDebug() <<  reply->errorString();
         reply->deleteLater();
-        return false;
+        return QJsonObject();
     }
-
     QByteArray content = reply->readAll();
 
     QString  str = QString::fromUtf8(content.data(), content.size());
 
     qDebug() << str << endl;
-    //QJsonObject  jobj  =  ObjectFromString(str);
-    return true;
+    QJsonObject  jobj  =  ObjectFromString(str);
+
+    reply->deleteLater();
+    return jobj;
 
 }
 
-void vkConnect::getUserInfo(QString _id, QLabel * _label){
+void vkConnect::getUserInfo(QString  _id, QLabel * _label){
     QString method = "users.get";
     QString requestStr = QString("%1%2?user_ids=%3&v=%4").arg(apiProtocol, method, _id, version);
-    QUrl reqUrl(requestStr);
-    QNetworkRequest request((reqUrl));
 
-    QNetworkReply* reply = manager->get(request);
-
-    QEventLoop loop;
-    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-
-    if(reply->error() != QNetworkReply::NoError){
-        _label->setText(reply->errorString());
-        reply->deleteLater();
-        return;
-    }
-
-    QByteArray content = reply->readAll();
-
-    QString  str = QString::fromUtf8(content.data(), content.size());
-
-    QJsonObject  jobj  =  ObjectFromString(str);
+    QJsonObject jobj =  sentRequest(requestStr);
 
     QString normstr = "";
 
     normstr += jobj["response"].toArray().at(0).toObject()["first_name"].toString();
 
     _label->setText(normstr);
-
-    reply->deleteLater();
 
     qDebug() << requestStr;
 }
@@ -88,13 +82,12 @@ int vkConnect::setManager(QNetworkAccessManager *man){
     return 1;
 }
 
-int vkConnect::setUsername(QString name){
+int vkConnect::setUsername(QString  name){
+    if(name.isEmpty()) return -1;
     username = name;
+    return 1;
 }
 
-int vkConnect::setPwd(QString password){
-    pwd = password;
-}
 
 QJsonObject vkConnect::ObjectFromString(const QString &in){
     QJsonObject obj;
