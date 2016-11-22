@@ -2,6 +2,7 @@
 #define FORM_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 #include "vkconnect.h"
 
 namespace Ui {
@@ -23,12 +24,16 @@ public slots:
     void ready();
 private slots:
 
+    void on_l_contacts_itemActivated(QListWidgetItem *item);
+
 private:
     Ui::Form *ui;
     vkConnect * vk;
     int w;
     int h;
     QJsonObject friends;
+    QJsonObject lastMessages;
+    QString currentDiaolg;
 
 };
 

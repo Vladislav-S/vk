@@ -9,6 +9,7 @@ vkConnect::vkConnect()
     version = ("5.60");
     apiProtocol = ("https://api.vk.com/method/");
     appId = ("5167666");
+    msgShowCount = 50;
 
 }
 
@@ -21,8 +22,18 @@ QJsonObject vkConnect::friendList(QString _id){
     QString requestStr = QString("%1%2?order=hints&user_id=%3&v=%4&access_token=%5").arg(apiProtocol, method, _id, version, token);
     QJsonObject obj = sentRequest(requestStr);
     obj = obj["response"].toObject();
-    qDebug() << obj;
+    //qDebug() << obj;
     return obj;
+}
+
+QJsonObject vkConnect::dialogHistory(const QString &user_id)
+{
+    QString method = "messages.getHistory";
+    QString requestStr = QString("%1%2?count=%6&user_id=%3&v=%4&access_token=%5").arg(apiProtocol, method, user_id, version, token, QString::number(msgShowCount));
+    QJsonObject obj = sentRequest(requestStr);
+    qDebug() << obj;
+
+    return obj["response"].toObject();
 }
 
 

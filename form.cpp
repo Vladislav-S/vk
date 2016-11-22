@@ -55,4 +55,32 @@ void Form::ready()
         //qDebug() << ui->l_contacts->item(i)->statusTip();
     }
 
+    //TODO: получение последних 200ста сообщений и хранение их в контейнере
+
+
+}
+
+void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
+{
+    //ui->t_view->setText(item->statusTip());
+    //ui->t_view->clear();
+    currentDiaolg.clear();
+    QJsonObject obj =  vk->dialogHistory(item->statusTip());
+    QJsonArray msgArray = obj["items"].toArray();
+
+    int out;
+    QString delimetr = "------------------------\n";
+    QString from = item->text();
+    QString body;
+    for(int i = 0; i < msgArray.size(); i++){
+        body = msgArray[i].toObject()["body"].toString();
+        currentDiaolg += delimetr;
+        out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
+        if(!out) currentDiaolg += "from " + from + "\n" + delimetr;
+        else currentDiaolg += "my\n"+delimetr;
+
+        currentDiaolg += body + "\n";
+    }
+    ui->t_view->setText(currentDiaolg);
+
 }

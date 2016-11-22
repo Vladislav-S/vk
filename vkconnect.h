@@ -32,6 +32,8 @@ public:
     QString getUserId();
     QJsonObject friendsOnline();
     QJsonObject friendList(QString _id);
+    //QJsonObject lastMessages(QString _id);
+    QJsonObject dialogHistory(const QString & user_id);
 
     void getUserInfo(QString _id, QLabel *_label);
     QString getUserFLName(const QString &str);
@@ -41,6 +43,7 @@ public slots:
 
 private:
     bool connected;
+    int msgShowCount;
     QNetworkAccessManager * manager;
 
     QString apiProtocol;
