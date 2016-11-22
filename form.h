@@ -17,12 +17,19 @@ public:
     Form(QWidget *parent = 0, vkConnect * _vk = 0);
     ~Form();
 
+    int getW();
+    int getH();
+public slots:
+    void ready();
 private slots:
-    void on_pushButton_clicked();
 
 private:
     Ui::Form *ui;
     vkConnect * vk;
+    int w;
+    int h;
+    QJsonObject friends;
+
 };
 
 #endif // FORM_H

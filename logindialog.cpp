@@ -17,7 +17,7 @@ loginDialog::~loginDialog()
 void loginDialog::on_pushButton_clicked()
 {
 
-    QUrl url = QUrl("https://oauth.vk.com/authorize?client_id=5167666&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,wall,groups&response_type=token&v=5.60");
+    QUrl url = QUrl("https://oauth.vk.com/authorize?client_id=5167666&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,wall,groups,messages,photos,audio,stats&response_type=token&v=5.60");
     QDesktopServices::openUrl(url);
 }
 

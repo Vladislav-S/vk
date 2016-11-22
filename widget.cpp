@@ -19,7 +19,6 @@ Widget::Widget(QWidget *parent) :
     w_log = new w_login(this, vk);
     form = new Form(this, vk);
 
-
     l = new QStackedLayout(this);
 
     l->addWidget(w_log);
@@ -30,6 +29,7 @@ Widget::Widget(QWidget *parent) :
     l->setCurrentIndex(currentIndex);
 
     connect(w_log, SIGNAL(login_succesfull()), this, SLOT(on_login()));
+    connect(this, SIGNAL(ready()), form, SLOT(ready()));
 
 }
 
@@ -38,6 +38,8 @@ void Widget::on_login(){
     qDebug() << "logged";
     currentIndex = 1;
     l->setCurrentIndex(currentIndex);
+    this->resize(form->getW(), form->getH());
+    emit ready();
 }
 
 Widget::~Widget()

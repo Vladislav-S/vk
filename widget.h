@@ -32,6 +32,8 @@ public:
 
 public slots:
     void on_login();
+signals:
+    void ready();
 private:
     int currentIndex;
 

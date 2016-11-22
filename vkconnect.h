@@ -31,8 +31,10 @@ public:
 
     QString getUserId();
     QJsonObject friendsOnline();
+    QJsonObject friendList(QString _id);
 
     void getUserInfo(QString _id, QLabel *_label);
+    QString getUserFLName(const QString &str);
 
 public slots:
     void acceptLogin(QUrlQuery * query);

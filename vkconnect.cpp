@@ -16,6 +16,17 @@ vkConnect::~vkConnect(){
 
 }
 
+QJsonObject vkConnect::friendList(QString _id){
+    QString method = "friends.get";
+    QString requestStr = QString("%1%2?order=hints&user_id=%3&v=%4&access_token=%5").arg(apiProtocol, method, _id, version, token);
+    QJsonObject obj = sentRequest(requestStr);
+    obj = obj["response"].toObject();
+    qDebug() << obj;
+    return obj;
+}
+
+
+
 void vkConnect::acceptLogin(QUrlQuery *query){
 
  token = (query->queryItemValue("access_token"));
@@ -66,7 +77,7 @@ QJsonObject vkConnect::friendsOnline(){
     QString method = "friends.getOnline";
     QString requestStr = QString("%1%2?v=%3&access_token=%4").arg(apiProtocol, method, version, token);
     QJsonObject obj = sentRequest(requestStr);
-    qDebug() << obj;
+    //qDebug() << obj;
     return obj;
 
 }
@@ -83,7 +94,16 @@ void vkConnect::getUserInfo(QString  _id, QLabel * _label){
 
     _label->setText(normstr);
 
-    qDebug() << requestStr;
+    //qDebug() << requestStr;
+}
+
+QString vkConnect::getUserFLName(const QString &str)
+{
+    QString method = "users.get";
+    QString requestStr = QString("%1%2?user_ids=%3&v=%4").arg(apiProtocol, method, str, version);
+    QJsonObject jobj =  sentRequest(requestStr);
+    //qDebug() << jobj;
+    return jobj["response"].toArray()[0].toObject()["first_name"].toString() + " " + jobj["response"].toArray()[0].toObject()["last_name"].toString();
 }
 
 int vkConnect::setManager(QNetworkAccessManager *man){
