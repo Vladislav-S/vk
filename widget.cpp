@@ -8,34 +8,29 @@ Widget::Widget(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    currentIndex = 0;
+
     //инициализируем менеджер доступа к сети
     manager = new QNetworkAccessManager(this);
 
     vk = new vkConnect();
     vk->setManager(manager);
+    w_log = new w_login(this, vk);
 
-    loginD = new loginDialog();
-    connect(loginD, SIGNAL(sentQUrl(QUrlQuery*)), vk, SLOT(acceptLogin(QUrlQuery*)));
-    connect(loginD, SIGNAL(finished(int)), this, SLOT(on_Widget_destroyed()));
+    l = new QStackedLayout(this);
+
+    l->addWidget(w_log);
+
+    setLayout(l);
+
+    l->setCurrentIndex(currentIndex);
 }
 
 Widget::~Widget()
 {
     delete ui;
-    delete loginD;
     delete manager;
     delete vk;
-}
-
-
-void Widget::on_button_login_clicked()
-{
-    if(!vk->isLogin()){
-        loginD->exec();
-        QString  id(vk->getUserId());
-        vk->getUserInfo(id, ui->label_current_user);
-    }
-    else{
-        //TODO: sent signal to draw window
-    }
+    delete l;
+    delete w_log;
 }

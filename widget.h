@@ -11,10 +11,12 @@
 #include <QJsonValue>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QStackedLayout>
 
-//#include <QList>
 #include "vkconnect.h"
-#include "logindialog.h"
+#include "form.h"
+#include "w_login.h"
+
 
 namespace Ui {
 class Widget;
@@ -30,15 +32,14 @@ public:
 
 private slots:
 
-
-    void on_button_login_clicked();
-
 private:
-    loginDialog * loginD;
+    int currentIndex;
+
     Ui::Widget *ui;
     QNetworkAccessManager * manager;
     vkConnect * vk;
-
+    QStackedLayout * l;
+    w_login * w_log;
 protected:
 
 };
