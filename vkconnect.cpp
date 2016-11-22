@@ -62,6 +62,15 @@ QJsonObject vkConnect::sentRequest(const QString &in){
 
 }
 
+QJsonObject vkConnect::friendsOnline(){
+    QString method = "friends.getOnline";
+    QString requestStr = QString("%1%2?v=%3&access_token=%4").arg(apiProtocol, method, version, token);
+    QJsonObject obj = sentRequest(requestStr);
+    qDebug() << obj;
+    return obj;
+
+}
+
 void vkConnect::getUserInfo(QString  _id, QLabel * _label){
     QString method = "users.get";
     QString requestStr = QString("%1%2?user_ids=%3&v=%4").arg(apiProtocol, method, _id, version);
@@ -87,8 +96,6 @@ int vkConnect::setUsername(QString  name){
     username = name;
     return 1;
 }
-
-
 QJsonObject vkConnect::ObjectFromString(const QString &in){
     QJsonObject obj;
 

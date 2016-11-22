@@ -35,6 +35,7 @@ void w_login::on_b_login_clicked()
         loginD->exec();
         QString  id(vk->getUserId());
         vk->getUserInfo(id, ui->label_current_user_name);
+        emit login_succesfull();
     }
     else{
         //TODO: sent signal to draw window

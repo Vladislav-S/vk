@@ -18,6 +18,8 @@ public:
     w_login(QWidget *parent = 0, vkConnect * _vk = 0);
     ~w_login();
 
+signals:
+    void login_succesfull();
 private slots:
     void on_b_login_clicked();
 

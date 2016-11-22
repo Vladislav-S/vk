@@ -16,7 +16,7 @@
 #include "vkconnect.h"
 #include "form.h"
 #include "w_login.h"
-
+#include "form.h"
 
 namespace Ui {
 class Widget;
@@ -30,8 +30,8 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
 
-private slots:
-
+public slots:
+    void on_login();
 private:
     int currentIndex;
 
@@ -40,6 +40,7 @@ private:
     vkConnect * vk;
     QStackedLayout * l;
     w_login * w_log;
+    Form * form;
 protected:
 
 };

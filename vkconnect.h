@@ -30,6 +30,7 @@ public:
     int setManager(QNetworkAccessManager *man);
 
     QString getUserId();
+    QJsonObject friendsOnline();
 
     void getUserInfo(QString _id, QLabel *_label);
 
