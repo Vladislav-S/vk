@@ -28,12 +28,15 @@ public:
 
     int setUsername(QString name);
     int setManager(QNetworkAccessManager *man);
+    int sendMsg(const QString &_msg, const QString &_id);
 
     QString getUserId();
     QJsonObject friendsOnline();
     QJsonObject friendList(QString _id);
     //QJsonObject lastMessages(QString _id);
     QJsonObject dialogHistory(const QString & user_id);
+
+
 
     void getUserInfo(QString _id, QLabel *_label);
     QString getUserFLName(const QString &str);

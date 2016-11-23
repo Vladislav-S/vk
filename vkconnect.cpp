@@ -122,6 +122,15 @@ int vkConnect::setManager(QNetworkAccessManager *man){
     return 1;
 }
 
+int vkConnect::sendMsg(const QString &_msg, const QString &_id)
+{
+    QString method = "messages.send";
+    QString requestStr = QString("%1%2?user_id=%3&message=%4&v=%5&access_token=%6").arg(apiProtocol, method, _id, _msg, version, token);
+    QJsonObject jobj =  sentRequest(requestStr);
+    qDebug() << jobj;
+    return  1;//jobj["request"].toObject();
+}
+
 int vkConnect::setUsername(QString  name){
     if(name.isEmpty()) return -1;
     username = name;

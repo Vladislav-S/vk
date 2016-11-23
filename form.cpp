@@ -10,6 +10,7 @@ Form::Form(QWidget *parent) :
     h = this->height();
 
     ui->l_contacts->setMouseTracking(true);
+   // ui->t_edit->keyPressEvent();
 }
 
 Form::Form(QWidget *parent, vkConnect * _vk) :
@@ -20,7 +21,11 @@ Form::Form(QWidget *parent, vkConnect * _vk) :
     vk = _vk;
     w = this->width();
     h = this->height();
+    //ui->progressBar->setMaximum();
+
+    ui->t_edit->setPB(ui->b_sent);
 }
+
 
 Form::~Form()
 {
@@ -35,12 +40,14 @@ int Form::getH(){
     return h;
 }
 
+
+
 void Form::ready()
 {
     friends = vk->friendList(vk->getUserId());
 
     int count = friends["count"].toInt();
-
+    ui->progressBar->setMaximum(count);
     QJsonArray friendIds = friends["items"].toArray();
 
     //qDebug() << QString::number(friendIds[0].toInt());
@@ -52,6 +59,7 @@ void Form::ready()
 
         QString statusTip = QString::number(friendIds[i].toInt());
         ui->l_contacts->item(i)->setStatusTip(statusTip);
+        //ui->progressBa
         //qDebug() << ui->l_contacts->item(i)->statusTip();
     }
 
@@ -76,11 +84,25 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
         body = msgArray[i].toObject()["body"].toString();
         currentDiaolg += delimetr;
         out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
-        if(!out) currentDiaolg += "from " + from + "\n" + delimetr;
-        else currentDiaolg += "my\n"+delimetr;
+        if(!out) currentDiaolg += "from " + from + "\n";// + delimetr;
+        else currentDiaolg += "my\n";//+delimetr;
 
         currentDiaolg += body + "\n";
     }
     ui->t_view->setText(currentDiaolg);
+
+}
+
+void Form::on_b_sent_clicked()
+{
+    QString msg = ui->t_edit->toPlainText();
+    vk->sendMsg(msg, ui->l_contacts->currentItem()->statusTip());
+
+    QString delimetr = "------------------------\n";
+    currentDiaolg = delimetr + "my\n" + msg + "\n" + currentDiaolg;
+
+    ui->t_view->setText(currentDiaolg);
+
+    ui->t_edit->clear();
 
 }

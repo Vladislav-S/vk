@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QListWidgetItem>
+#include <QKeyEvent>
 #include "vkconnect.h"
 
 namespace Ui {
@@ -20,11 +21,14 @@ public:
 
     int getW();
     int getH();
+
 public slots:
     void ready();
 private slots:
 
     void on_l_contacts_itemActivated(QListWidgetItem *item);
+
+    void on_b_sent_clicked();
 
 private:
     Ui::Form *ui;
