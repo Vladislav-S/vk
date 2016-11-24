@@ -26,6 +26,20 @@ QJsonObject vkConnect::friendList(QString _id){
     return obj;
 }
 
+QJsonObject vkConnect::lastMessages(QString last_id){
+    QString method = "messages.get";
+    QString requestStr;
+
+    if(last_id.isEmpty())
+        requestStr = QString("%1%2?count=%3&out=0&v=%4&access_token=%5").arg(apiProtocol, method, QString::number(msgShowCount-40), version, token);
+    if(!last_id.isEmpty())
+        requestStr = QString("%1%2?count=%3&out=0&v=%4&last_message_id=%6&access_token=%5").arg(apiProtocol, method, QString::number(msgShowCount-40), version, token, last_id);
+
+    QJsonObject obj = sentRequest(requestStr);
+    //qDebug() << requestStr;
+    return obj;
+}
+
 QJsonObject vkConnect::dialogHistory(const QString &user_id)
 {
     QString method = "messages.getHistory";
@@ -52,6 +66,11 @@ bool vkConnect::isLogin(){
     return connected;
 }
 
+bool vkConnect::hasNewMsgs(const QJsonObject &obj)
+{
+    return !obj["response"].toObject()["items"].toArray().isEmpty();
+}
+
 QString  vkConnect::getUserId(){
     return id;
 }
@@ -76,7 +95,7 @@ QJsonObject vkConnect::sentRequest(const QString &in){
 
     QString  str = QString::fromUtf8(content.data(), content.size());
 
-    qDebug() << str << endl;
+    //qDebug() << str << endl;
     QJsonObject  jobj  =  ObjectFromString(str);
 
     reply->deleteLater();
@@ -127,8 +146,8 @@ int vkConnect::sendMsg(const QString &_msg, const QString &_id)
     QString method = "messages.send";
     QString requestStr = QString("%1%2?user_id=%3&message=%4&v=%5&access_token=%6").arg(apiProtocol, method, _id, _msg, version, token);
     QJsonObject jobj =  sentRequest(requestStr);
-    qDebug() << jobj;
-    return  1;//jobj["request"].toObject();
+    //qDebug() << jobj;
+    return  jobj["response"].toInt();
 }
 
 int vkConnect::setUsername(QString  name){

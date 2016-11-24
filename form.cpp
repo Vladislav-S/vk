@@ -10,6 +10,13 @@ Form::Form(QWidget *parent) :
     h = this->height();
 
     ui->l_contacts->setMouseTracking(true);
+
+    ui->progressBar->setMinimum(0);
+    ui->progressBar->setValue(0);
+
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(checkNewMsg()));
+
    // ui->t_edit->keyPressEvent();
 }
 
@@ -24,6 +31,12 @@ Form::Form(QWidget *parent, vkConnect * _vk) :
     //ui->progressBar->setMaximum();
 
     ui->t_edit->setPB(ui->b_sent);
+
+    ui->progressBar->setMinimum(0);
+    ui->progressBar->setValue(0);
+
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(checkNewMsg()));
 }
 
 
@@ -46,8 +59,11 @@ void Form::ready()
 {
     friends = vk->friendList(vk->getUserId());
 
+    int progress = 0;
     int count = friends["count"].toInt();
     ui->progressBar->setMaximum(count);
+
+
     QJsonArray friendIds = friends["items"].toArray();
 
     //qDebug() << QString::number(friendIds[0].toInt());
@@ -59,11 +75,18 @@ void Form::ready()
 
         QString statusTip = QString::number(friendIds[i].toInt());
         ui->l_contacts->item(i)->setStatusTip(statusTip);
-        //ui->progressBa
+        progress++;
+        ui->progressBar->setValue(progress);
         //qDebug() << ui->l_contacts->item(i)->statusTip();
     }
 
-    //TODO: получение последних 200ста сообщений и хранение их в контейнере
+    //TODO: получение последних 10 сообщений и хранение их в контейнере
+    lastMessages = vk->lastMessages();
+    //qDebug() << lastMessages;
+    lastMsgID = QString::number(lastMessages["response"].toObject()["items"].toArray()[0].toObject()["id"].toInt());
+    //qDebug() <<  lastMsgID;
+
+    timer->start(7000);
 
 
 }
@@ -105,4 +128,38 @@ void Form::on_b_sent_clicked()
 
     ui->t_edit->clear();
 
+}
+
+void Form::on_progressBar_valueChanged(int value)
+{
+    if(value == ui->progressBar->maximum()) ui->progressBar->hide();
+}
+
+void Form::checkNewMsg()
+{
+
+    lastMessages = vk->lastMessages(lastMsgID);
+    //qDebug() << vk->hasNewMsgs(lastMessages);
+    if(!vk->hasNewMsgs(lastMessages)) return;
+    //qDebug() << lastMessages;
+
+    QJsonArray array = lastMessages["response"].toObject()["items"].toArray();
+    lastMsgID = QString::number(array[0].toObject()["id"].toInt());
+    QListWidgetItem * item;
+
+    for(int i = 0; i < array.size(); i++){
+        item = serchById(QString::number(array[i].toObject()["user_id"].toInt()));
+        emit ui->l_contacts->itemActivated(item);
+        //qDebug() << item->text();
+    }
+
+}
+
+QListWidgetItem * Form::serchById(const QString &id)
+{
+    int number = ui->l_contacts->count();
+    for(int i{0}; i < number; i++){
+        if(ui->l_contacts->item(i)->statusTip() == id) return ui->l_contacts->item(i);
+    }
+    return Q_NULLPTR;
 }

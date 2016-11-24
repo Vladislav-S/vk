@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QListWidgetItem>
 #include <QKeyEvent>
+#include <QTime>
+#include <QTimer>
 #include "vkconnect.h"
 
 namespace Ui {
@@ -22,6 +24,7 @@ public:
     int getW();
     int getH();
 
+
 public slots:
     void ready();
 private slots:
@@ -30,7 +33,13 @@ private slots:
 
     void on_b_sent_clicked();
 
+    void on_progressBar_valueChanged(int value);
+
+    void checkNewMsg();
+
 private:
+    QListWidgetItem * serchById(const QString & id);
+
     Ui::Form *ui;
     vkConnect * vk;
     int w;
@@ -38,6 +47,9 @@ private:
     QJsonObject friends;
     QJsonObject lastMessages;
     QString currentDiaolg;
+    QString lastMsgID;
+
+    QTimer * timer;
 
 };
 

@@ -25,6 +25,7 @@ public:
     ~vkConnect();
 
     bool isLogin();
+    bool hasNewMsgs(const QJsonObject &obj);
 
     int setUsername(QString name);
     int setManager(QNetworkAccessManager *man);
@@ -33,7 +34,7 @@ public:
     QString getUserId();
     QJsonObject friendsOnline();
     QJsonObject friendList(QString _id);
-    //QJsonObject lastMessages(QString _id);
+    QJsonObject lastMessages(QString last_id = "");
     QJsonObject dialogHistory(const QString & user_id);
 
 
