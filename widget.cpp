@@ -28,8 +28,11 @@ Widget::Widget(QWidget *parent) :
 
     l->setCurrentIndex(currentIndex);
 
+
     connect(w_log, SIGNAL(login_succesfull()), this, SLOT(on_login()));
     connect(this, SIGNAL(ready()), form, SLOT(ready()));
+    connect(vk, SIGNAL(replyError(QString)), this, SLOT(on_error(QString)));
+
 
 }
 
@@ -42,6 +45,17 @@ void Widget::on_login(){
     emit ready();
 }
 
+void Widget::on_error(const QString &string)
+{
+    qDebug() << string;
+    errorD = new error_dialog(this, string);
+
+    connect(errorD, SIGNAL(on_ok()), this, SLOT(close()));
+
+    errorD->exec();
+    //QThread::sleep(100000);
+}
+
 Widget::~Widget()
 {
     delete ui;
@@ -50,4 +64,5 @@ Widget::~Widget()
     delete l;
     delete w_log;
     delete form;
+    delete errorD;
 }

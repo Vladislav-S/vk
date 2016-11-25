@@ -37,6 +37,8 @@ Form::Form(QWidget *parent, vkConnect * _vk) :
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(checkNewMsg()));
+
+
 }
 
 
@@ -57,6 +59,7 @@ int Form::getH(){
 
 void Form::ready()
 {
+    if(!vk->isLogin()) return;
     friends = vk->friendList(vk->getUserId());
 
     int progress = 0;

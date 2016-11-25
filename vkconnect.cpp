@@ -18,6 +18,7 @@ vkConnect::~vkConnect(){
 }
 
 QJsonObject vkConnect::friendList(QString _id){
+    if(!connected) return QJsonObject();
     QString method = "friends.get";
     QString requestStr = QString("%1%2?order=hints&user_id=%3&v=%4&access_token=%5").arg(apiProtocol, method, _id, version, token);
     QJsonObject obj = sentRequest(requestStr);
@@ -27,6 +28,8 @@ QJsonObject vkConnect::friendList(QString _id){
 }
 
 QJsonObject vkConnect::lastMessages(QString last_id){
+    if(!connected) return QJsonObject();
+
     QString method = "messages.get";
     QString requestStr;
 
@@ -42,6 +45,8 @@ QJsonObject vkConnect::lastMessages(QString last_id){
 
 QJsonObject vkConnect::dialogHistory(const QString &user_id)
 {
+    if(!connected) return QJsonObject();
+
     QString method = "messages.getHistory";
     QString requestStr = QString("%1%2?count=%6&user_id=%3&v=%4&access_token=%5").arg(apiProtocol, method, user_id, version, token, QString::number(msgShowCount));
     QJsonObject obj = sentRequest(requestStr);
@@ -51,7 +56,7 @@ QJsonObject vkConnect::dialogHistory(const QString &user_id)
 }
 
 
-
+//slot
 void vkConnect::acceptLogin(QUrlQuery *query){
 
  token = (query->queryItemValue("access_token"));
@@ -71,6 +76,30 @@ bool vkConnect::hasNewMsgs(const QJsonObject &obj)
     return !obj["response"].toObject()["items"].toArray().isEmpty();
 }
 
+bool vkConnect::isCorrectLogin(const QString &str)
+{
+    //TODO
+    QUrl url(str);
+    QUrlQuery urlQ(url);
+
+    if(urlQ.isEmpty() || !urlQ.hasQueryItem("access_token") || !urlQ.hasQueryItem("expires_in")
+            || !urlQ.hasQueryItem("user_id")) return false;
+
+    return true;
+}
+
+bool vkConnect::setOnline()
+{
+    if(!connected) return false;
+
+    QString method = "account.setOnline";
+    QString requestStr = QString("%1%2?access_token=%3").arg(apiProtocol, method, token);
+    QJsonObject obj = sentRequest(requestStr);
+    qDebug() << obj;
+    return false;
+
+}
+
 QString  vkConnect::getUserId(){
     return id;
 }
@@ -78,6 +107,7 @@ QString  vkConnect::getUserId(){
 
 
 QJsonObject vkConnect::sentRequest(const QString &in){
+
     QUrl url(in);
     QNetworkRequest request(url);
     QNetworkReply* reply = manager->get(request);
@@ -97,10 +127,19 @@ QJsonObject vkConnect::sentRequest(const QString &in){
 
     //qDebug() << str << endl;
     QJsonObject  jobj  =  ObjectFromString(str);
-
+    //qDebug() << "is reply correct?: " <<
+    isReplyCorrect(jobj);
     reply->deleteLater();
     return jobj;
 
+}
+
+bool vkConnect::isReplyCorrect(const QJsonObject &obj)
+{
+    if(!obj["error"].isObject()) return true;
+    connected = false;
+    emit replyError(obj["error"].toObject()["error_msg"].toString());
+    return false;
 }
 
 QJsonObject vkConnect::friendsOnline(){

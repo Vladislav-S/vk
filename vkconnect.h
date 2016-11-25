@@ -26,6 +26,8 @@ public:
 
     bool isLogin();
     bool hasNewMsgs(const QJsonObject &obj);
+    bool isCorrectLogin(const QString &str);
+    bool setOnline();
 
     int setUsername(QString name);
     int setManager(QNetworkAccessManager *man);
@@ -41,6 +43,9 @@ public:
 
     void getUserInfo(QString _id, QLabel *_label);
     QString getUserFLName(const QString &str);
+
+signals:
+    void replyError(const QString & str);
 
 public slots:
     void acceptLogin(QUrlQuery * query);
@@ -60,6 +65,8 @@ private:
 
     QJsonObject ObjectFromString(const QString& in);
     QJsonObject sentRequest(const QString& in);
+
+    bool isReplyCorrect(const QJsonObject & obj);
 
 };
 

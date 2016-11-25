@@ -31,11 +31,18 @@ w_login::~w_login()
 
 void w_login::on_b_login_clicked()
 {
+    //проверка, нет ли текущего юзера
     if(!vk->isLogin()){
-        loginD->exec();
-        QString  id(vk->getUserId());
-        vk->getUserInfo(id, ui->label_current_user_name);
-        emit login_succesfull();
+        //если нет
+        //запускаем окно логинизации
+        //ТУДУ: присвоить результат loginD переменной и проверить какое действие было выбрано
+        if(loginD->exec() == QInputDialog::Accepted){
+            vk->setOnline();
+            QString  id(vk->getUserId());
+            vk->getUserInfo(id, ui->label_current_user_name);
+            emit login_succesfull();
+
+        }
     }
     else{
         //TODO: sent signal to draw window

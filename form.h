@@ -6,6 +6,7 @@
 #include <QKeyEvent>
 #include <QTime>
 #include <QTimer>
+#include <QtWebEngineWidgets>
 #include "vkconnect.h"
 
 namespace Ui {

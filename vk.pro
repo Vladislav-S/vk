@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network webenginewidgets webview
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,17 +18,20 @@ SOURCES += main.cpp\
     logindialog.cpp \
     form.cpp \
     w_login.cpp \
-    myqtextedit.cpp
+    myqtextedit.cpp \
+    error_dialog.cpp
 
 HEADERS  += widget.h \
     vkconnect.h \
     logindialog.h \
     form.h \
     w_login.h \
-    myqtextedit.h
+    myqtextedit.h \
+    error_dialog.h
 
 FORMS    += widget.ui \
     logindialog.ui \
     form.ui \
     w_login.ui \
-    myqtextedit.ui
+    myqtextedit.ui \
+    error_dialog.ui

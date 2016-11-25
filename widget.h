@@ -12,11 +12,13 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QStackedLayout>
+#include <QThread>
 
 #include "vkconnect.h"
 #include "form.h"
 #include "w_login.h"
 #include "form.h"
+#include "error_dialog.h"
 
 namespace Ui {
 class Widget;
@@ -32,6 +34,7 @@ public:
 
 public slots:
     void on_login();
+    void on_error(const QString & string);
 signals:
     void ready();
 private:
@@ -43,6 +46,7 @@ private:
     QStackedLayout * l;
     w_login * w_log;
     Form * form;
+    error_dialog * errorD;
 protected:
 
 };

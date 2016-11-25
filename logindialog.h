@@ -6,6 +6,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QDesktopServices>
+#include <QString>
 //#include "widget.h"
 
 namespace Ui {
@@ -29,7 +30,11 @@ private slots:
     void on_buttonBox_accepted();
 
 
+    void on_lineEdit_textChanged(const QString &arg1);
+
 private:
+
+    bool isCorrectLogin(const QString &str);
 
     Ui::loginDialog *ui;
     QUrlQuery urlq;

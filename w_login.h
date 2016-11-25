@@ -2,6 +2,7 @@
 #define W_LOGIN_H
 
 #include <QWidget>
+#include <QInputDialog>
 #include "vkconnect.h"
 #include "logindialog.h"
 
