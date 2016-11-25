@@ -118,6 +118,7 @@ QJsonObject vkConnect::sentRequest(const QString &in){
 
     if(reply->error() != QNetworkReply::NoError){
         qDebug() <<  reply->errorString();
+        emit replyError(reply->errorString());
         reply->deleteLater();
         return QJsonObject();
     }
