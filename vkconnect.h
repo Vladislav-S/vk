@@ -1,6 +1,9 @@
 #ifndef VKCONNECT_H
 #define VKCONNECT_H
 
+//#include <QFile>
+//#include <QTextStream>
+
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -28,6 +31,8 @@ public:
     bool hasNewMsgs(const QJsonObject &obj);
     bool isCorrectLogin(const QString &str);
     bool setOnline();
+    //bool writeToData();
+
 
     int setUsername(QString name);
     int setManager(QNetworkAccessManager *man);
@@ -49,6 +54,7 @@ signals:
 
 public slots:
     void acceptLogin(QUrlQuery * query);
+    void acceptLogin2(const QUrlQuery & query);
 
 private:
     bool connected;

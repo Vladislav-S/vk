@@ -6,9 +6,6 @@ w_login::w_login(QWidget *parent) :
     ui(new Ui::w_login)
 {
     ui->setupUi(this);
-
-    loginD = new loginDialog(this);
-
 }
 
 w_login::w_login(QWidget *parent, vkConnect * _vk) :
@@ -17,34 +14,46 @@ w_login::w_login(QWidget *parent, vkConnect * _vk) :
 {
     ui->setupUi(this);
     vk = _vk;
-    loginD = new loginDialog(this);
-
-    connect(loginD, SIGNAL(sentQUrl(QUrlQuery*)), vk, SLOT(acceptLogin(QUrlQuery*)));
+    connect(this, SIGNAL(sentQUrl(QUrlQuery*)), vk, SLOT(acceptLogin(QUrlQuery*)));
 
 }
 
 w_login::~w_login()
 {
     delete ui;
-    delete loginD;
+    delete urlq;
+    delete web;
+
 }
 
-void w_login::on_b_login_clicked()
-{
-    //проверка, нет ли текущего юзера
-    if(!vk->isLogin()){
-        //если нет
-        //запускаем окно логинизации
-        //ТУДУ: присвоить результат loginD переменной и проверить какое действие было выбрано
-        if(loginD->exec() == QInputDialog::Accepted){
-            vk->setOnline();
-            QString  id(vk->getUserId());
-            vk->getUserInfo(id, ui->label_current_user_name);
-            emit login_succesfull();
 
-        }
-    }
-    else{
-        //TODO: sent signal to draw window
-    }
+
+void w_login::urlChanged(const QUrl & _url)
+{
+    web->close();
+    QString str = _url.toString().replace("#", "?");
+    QUrl nurl(str);
+    urlq = new QUrlQuery(_url);
+    QUrlQuery querry(nurl);
+    //qDebug() << "new url: "<< querry.toString();//querry.toString();
+    emit sentQUrl(&querry);
+    vk->setOnline();
+    emit login_succesfull();
+
+
+}
+
+void w_login::on_b_web_login_clicked()
+{
+    QUrl url = QUrl("https://oauth.vk.com/authorize?client_id=5167666&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,wall,groups,messages,photos,audio,stats&response_type=token&v=5.60");
+
+    web = new QWebEngineView(this);
+    connect(web, SIGNAL(urlChanged(QUrl)), this, SLOT(urlChanged(QUrl)));
+    web->show();
+    web->load(url);
+    //this->resize(web->width(), web->height());
+
+
+
+
 }

@@ -3,8 +3,10 @@
 
 #include <QWidget>
 #include <QInputDialog>
+#include <QWebEngineView>
+#include <QUrlQuery>
+
 #include "vkconnect.h"
-#include "logindialog.h"
 
 namespace Ui {
 class w_login;
@@ -21,13 +23,17 @@ public:
 
 signals:
     void login_succesfull();
+    void sentQUrl(QUrlQuery* _qurl);
 private slots:
-    void on_b_login_clicked();
+    void urlChanged(const QUrl &_url);
+    void on_b_web_login_clicked();
 
 private:
     Ui::w_login *ui;
     vkConnect * vk;
-    loginDialog * loginD;
+    QWebEngineView * web;
+    QUrlQuery * urlq;
+
 };
 
 #endif // W_LOGIN_H

@@ -33,6 +33,14 @@ Widget::Widget(QWidget *parent) :
     connect(this, SIGNAL(ready()), form, SLOT(ready()));
     connect(vk, SIGNAL(replyError(QString)), this, SLOT(on_error(QString)));
 
+    //TODO - перевести функционал в vkConnect
+//    QFile file(":/userdata.txt");
+//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+//            return;
+//    QByteArray barray = file.readAll();
+//    QString str = QString::fromUtf8(barray);
+//    qDebug() << barray;
+//    qDebug() << str;
 
 }
 

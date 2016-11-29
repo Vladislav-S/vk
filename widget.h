@@ -12,7 +12,8 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QStackedLayout>
-#include <QThread>
+//#include <QThread>
+//#include <QFile>
 
 #include "vkconnect.h"
 #include "form.h"

@@ -15,7 +15,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         widget.cpp \
     vkconnect.cpp \
-    logindialog.cpp \
     form.cpp \
     w_login.cpp \
     myqtextedit.cpp \
@@ -23,15 +22,15 @@ SOURCES += main.cpp\
 
 HEADERS  += widget.h \
     vkconnect.h \
-    logindialog.h \
     form.h \
     w_login.h \
     myqtextedit.h \
     error_dialog.h
 
 FORMS    += widget.ui \
-    logindialog.ui \
     form.ui \
     w_login.ui \
     myqtextedit.ui \
     error_dialog.ui
+
+RESOURCES +=

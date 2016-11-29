@@ -60,10 +60,16 @@ QJsonObject vkConnect::dialogHistory(const QString &user_id)
 void vkConnect::acceptLogin(QUrlQuery *query){
 
  token = (query->queryItemValue("access_token"));
+ qDebug() << "token: " << token;
  id = (query->queryItemValue("user_id"));
  expires_in = (query->queryItemValue("expires_in"));
  connected = true;
-//TODO: emit signal to widget, to give info
+ //TODO: emit signal to widget, to give info
+}
+
+void vkConnect::acceptLogin2(const QUrlQuery &query)
+{
+
 }
 
 
@@ -99,6 +105,32 @@ bool vkConnect::setOnline()
     return false;
 
 }
+
+//bool vkConnect::writeToData()
+//{
+//    QJsonObject obj;
+//    obj.insert("access_token", QJsonValue(token));
+//    obj.insert("expires_in", QJsonValue(expires_in));
+//    obj.insert("user_id", QJsonValue(id));
+
+//    QJsonDocument doc(obj);
+
+//    QFile file("./userdata.txt");
+//    if (!file.open(QIODevice::WriteOnly))
+//    {
+//        qDebug() << "error";
+//        return false;
+//    }
+
+//    QTextStream out(&file);
+//    QString str("hhhhhhhhhh");
+//    out.setString(&str);
+//    out << "hjjjjjjjjj"<<QString::fromUtf8(doc.toJson(QJsonDocument::Compact)) << "\n";
+//    qDebug() << QString::fromUtf8(doc.toJson(QJsonDocument::Compact));
+//    file.close();
+//    return true;
+
+//}
 
 QString  vkConnect::getUserId(){
     return id;
