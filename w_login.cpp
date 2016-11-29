@@ -9,13 +9,13 @@ w_login::w_login(QWidget *parent) :
 }
 
 //основной конструктор
-w_login::w_login(QWidget *parent, vkConnect * _vk) :
+w_login::w_login(QWidget *parent, QSharedPointer<vkConnect> _vk) :
     QWidget(parent),
     ui(new Ui::w_login)
 {
     ui->setupUi(this);
     vk = _vk;
-    connect(this, SIGNAL(sentQUrl(QUrlQuery*)), vk, SLOT(acceptLogin(QUrlQuery*)));
+    connect(this, SIGNAL(sentQUrl(QUrlQuery*)), vk.data(), SLOT(acceptLogin(QUrlQuery*)));
 
 }
 w_login::~w_login()

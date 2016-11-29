@@ -20,7 +20,7 @@ Form::Form(QWidget *parent) :
    // ui->t_edit->keyPressEvent();
 }
 
-Form::Form(QWidget *parent, vkConnect * _vk) :
+Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
     QWidget(parent),
     ui(new Ui::Form)
 {

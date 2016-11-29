@@ -28,7 +28,7 @@ class w_login : public QWidget
 
 public:
     explicit w_login(QWidget *parent = 0);
-    w_login(QWidget *parent = 0, vkConnect * _vk = 0);
+    w_login(QWidget *parent = 0, QSharedPointer<vkConnect> _vk = QSharedPointer<vkConnect>());
     ~w_login();
 
 signals:
@@ -46,7 +46,8 @@ private slots:
 
 private:
     Ui::w_login *ui;
-    vkConnect * vk;
+    QSharedPointer<vkConnect> vk;
+
     ///для отображения веб страницы логинизации
     QWebEngineView * web;
     ///хранит праметры передаваемой ссылки

@@ -14,7 +14,7 @@ Widget::Widget(QWidget *parent) :
     //manager.reset(new QNetworkAccessManager(this));
     manager =  QSharedPointer<QNetworkAccessManager>(new QNetworkAccessManager(this));
     //инициализируем класс подключения к серверу вк
-    vk = new vkConnect();
+    vk =  QSharedPointer<vkConnect>(new vkConnect());
     vk->setManager(manager);
 
     //иннциализируем окна
@@ -34,7 +34,7 @@ Widget::Widget(QWidget *parent) :
     connect(w_log, SIGNAL(login_succesfull()), this, SLOT(on_login())); //если успешно подключились в w_log
     connect(w_log, SIGNAL(resized(int,int)), this, SLOT(on_content_resized(int,int))); //если изменился размер в w_log
     connect(this, SIGNAL(ready()), form, SLOT(ready())); //если данные готовы для вывода в form
-    connect(vk, SIGNAL(replyError(QString)), this, SLOT(on_error(QString))); //если ошибка
+    connect(vk.data(), SIGNAL(replyError(QString)), this, SLOT(on_error(QString))); //если ошибка
 
 }
 
@@ -77,7 +77,8 @@ Widget::~Widget()
 {
     delete ui;
     //delete manager;
-    delete vk;
+    //delete vk;
+    vk.clear();
     l.clear();
     delete w_log;
     delete form;

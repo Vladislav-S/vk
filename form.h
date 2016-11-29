@@ -19,7 +19,7 @@ class Form : public QWidget
 
 public:
     explicit Form(QWidget *parent = 0);
-    Form(QWidget *parent = 0, vkConnect * _vk = 0);
+    Form(QWidget *parent = 0, QSharedPointer<vkConnect> _vk = QSharedPointer<vkConnect>());
     ~Form();
 
     int getW();
@@ -42,7 +42,8 @@ private:
     QListWidgetItem * serchById(const QString & id);
 
     Ui::Form *ui;
-    vkConnect * vk;
+    QSharedPointer<vkConnect> vk;
+
     int w;
     int h;
     QJsonObject friends;

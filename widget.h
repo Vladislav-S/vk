@@ -78,8 +78,7 @@ private:
     //QNetworkAccessManager * manager;
     QSharedPointer<QNetworkAccessManager>  manager;
     ///класс подключения к серверу вк
-    //QSharedPointer<vkConnect> vk;
-    vkConnect * vk;
+    QSharedPointer<vkConnect> vk;
     ///класс хранения окон
     QPointer<QStackedLayout>  l;
     ///класс окна подключения
