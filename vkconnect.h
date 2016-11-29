@@ -27,34 +27,42 @@ public:
     explicit vkConnect();
     ~vkConnect();
 
+    ///данные для подключения установлены и актуальны?
     bool isLogin();
+    ///есть новые сообщения?
     bool hasNewMsgs(const QJsonObject &obj);
+    ///возвращенный url корректен?
     bool isCorrectLogin(const QString &str);
+    ///установить статус пользователся "online"
     bool setOnline();
-    //bool writeToData();
-
 
     int setUsername(QString name);
     int setManager(QNetworkAccessManager *man);
     int sendMsg(const QString &_msg, const QString &_id);
 
+    ///получить id пользователя
     QString getUserId();
+    ///получить друзей онлайн
     QJsonObject friendsOnline();
+    ///получить список друзей
     QJsonObject friendList(QString _id);
+    ///получить последние 10 сообщений
     QJsonObject lastMessages(QString last_id = "");
+    ///получить последние 50 сообщений диалога
     QJsonObject dialogHistory(const QString & user_id);
 
 
-
+    ///получить информацию о пользователе и забить его имя в лейбл
     void getUserInfo(QString _id, QLabel *_label);
-    QString getUserFLName(const QString &str);
+    ///получить ИМЯ ФАМИЛИЮ пользователя
+    QString getUserFLName(const QString &name);
 
 signals:
+    ///сообщить об ошибке
     void replyError(const QString & str);
 
 public slots:
     void acceptLogin(QUrlQuery * query);
-    void acceptLogin2(const QUrlQuery & query);
 
 private:
     bool connected;
@@ -69,9 +77,11 @@ private:
     QString username;
     QString token;
 
+    ///получить QJsonObject из строки
     QJsonObject ObjectFromString(const QString& in);
+    ///отправить запрос и получить ответ. in -  url
     QJsonObject sentRequest(const QString& in);
-
+    ///ответ нас устраивает?
     bool isReplyCorrect(const QJsonObject & obj);
 
 };

@@ -1,7 +1,6 @@
 #include "ui_widget.h"
 #include "widget.h"
 
-//класс окна
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget)
@@ -13,37 +12,32 @@ Widget::Widget(QWidget *parent) :
     //инициализируем менеджер доступа к сети
     manager = new QNetworkAccessManager(this);
 
+    //инициализируем класс подключения к серверу вк
     vk = new vkConnect();
     vk->setManager(manager);
 
+    //иннциализируем окна
     w_log = new w_login(this, vk);
     form = new Form(this, vk);
 
+    //иниц. хранилища окон
     l = new QStackedLayout(this);
-
     l->addWidget(w_log);
     l->addWidget(form);
-
+    //устанавливаем хранилище в качестве текущего
     setLayout(l);
-
+    //устанавливаем и отображаем текущее окно
     l->setCurrentIndex(currentIndex);
 
 
-    connect(w_log, SIGNAL(login_succesfull()), this, SLOT(on_login()));
-    connect(this, SIGNAL(ready()), form, SLOT(ready()));
-    connect(vk, SIGNAL(replyError(QString)), this, SLOT(on_error(QString)));
-
-    //TODO - перевести функционал в vkConnect
-//    QFile file(":/userdata.txt");
-//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-//            return;
-//    QByteArray barray = file.readAll();
-//    QString str = QString::fromUtf8(barray);
-//    qDebug() << barray;
-//    qDebug() << str;
+    connect(w_log, SIGNAL(login_succesfull()), this, SLOT(on_login())); //если успешно подключились в w_log
+    connect(w_log, SIGNAL(resized(int,int)), this, SLOT(on_content_resized(int,int))); //если изменился размер в w_log
+    connect(this, SIGNAL(ready()), form, SLOT(ready())); //если данные готовы для вывода в form
+    connect(vk, SIGNAL(replyError(QString)), this, SLOT(on_error(QString))); //если ошибка
 
 }
 
+//в случае успешного подключения отображает сообщает окну чата о готовности, окно затем отображается
 void Widget::on_login(){
 
     qDebug() << "logged";
@@ -53,6 +47,7 @@ void Widget::on_login(){
     emit ready();
 }
 
+//слот - держатель ошибок, в конце уничтожает главное окно
 void Widget::on_error(const QString &string)
 {
     qDebug() << string;
@@ -64,6 +59,12 @@ void Widget::on_error(const QString &string)
     //QThread::sleep(100000);
 }
 
+//сигнал - когда изменен размер окна
+void Widget::on_content_resized(const int &_width, const int &_height)
+{
+    this->resize(_width, _height);
+}
+
 Widget::~Widget()
 {
     delete ui;
@@ -72,5 +73,6 @@ Widget::~Widget()
     delete l;
     delete w_log;
     delete form;
-    delete errorD;
+    if(errorD != nullptr)
+        delete errorD;
 }

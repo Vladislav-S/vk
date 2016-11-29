@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="b_change">
+  <widget class="QPushButton" name="b_web_login">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -23,20 +23,20 @@
     </rect>
    </property>
    <property name="text">
-    <string>Сменить юзера</string>
+    <string>Login</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="b_web_login">
+  <widget class="QCheckBox" name="cb_new">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>80</y>
-     <width>121</width>
-     <height>32</height>
+     <x>160</x>
+     <y>150</y>
+     <width>87</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Login</string>
+    <string>new user</string>
    </property>
   </widget>
  </widget>

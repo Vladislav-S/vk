@@ -45,6 +45,7 @@ Form::Form(QWidget *parent, vkConnect * _vk) :
 Form::~Form()
 {
     delete ui;
+    delete timer;
 }
 
 int Form::getW(){

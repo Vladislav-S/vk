@@ -50,7 +50,7 @@ QJsonObject vkConnect::dialogHistory(const QString &user_id)
     QString method = "messages.getHistory";
     QString requestStr = QString("%1%2?count=%6&user_id=%3&v=%4&access_token=%5").arg(apiProtocol, method, user_id, version, token, QString::number(msgShowCount));
     QJsonObject obj = sentRequest(requestStr);
-    qDebug() << obj;
+    //qDebug() << obj;
 
     return obj["response"].toObject();
 }
@@ -60,21 +60,17 @@ QJsonObject vkConnect::dialogHistory(const QString &user_id)
 void vkConnect::acceptLogin(QUrlQuery *query){
 
  token = (query->queryItemValue("access_token"));
- qDebug() << "token: " << token;
+ //qDebug() << "token: " << token;
  id = (query->queryItemValue("user_id"));
  expires_in = (query->queryItemValue("expires_in"));
  connected = true;
  //TODO: emit signal to widget, to give info
 }
 
-void vkConnect::acceptLogin2(const QUrlQuery &query)
-{
-
-}
-
-
 bool vkConnect::isLogin(){
-    return connected;
+    if(!token.isEmpty() && connected && !version.isEmpty() &&!expires_in.isEmpty())
+        return true;
+    return false;
 }
 
 bool vkConnect::hasNewMsgs(const QJsonObject &obj)
@@ -101,7 +97,7 @@ bool vkConnect::setOnline()
     QString method = "account.setOnline";
     QString requestStr = QString("%1%2?access_token=%3").arg(apiProtocol, method, token);
     QJsonObject obj = sentRequest(requestStr);
-    qDebug() << obj;
+    //qDebug() << obj;
     return false;
 
 }
@@ -149,7 +145,7 @@ QJsonObject vkConnect::sentRequest(const QString &in){
     loop.exec();
 
     if(reply->error() != QNetworkReply::NoError){
-        qDebug() <<  reply->errorString();
+        //qDebug() <<  reply->errorString();
         emit replyError(reply->errorString());
         reply->deleteLater();
         return QJsonObject();
