@@ -21,7 +21,8 @@ w_login::w_login(QWidget *parent, vkConnect * _vk) :
 w_login::~w_login()
 {
     delete ui;
-    delete urlq;
+    if(urlq != nullptr)
+        delete urlq;
     //web->deleteLater();
 
 }

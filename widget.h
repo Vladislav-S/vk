@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QCloseEvent>
 #include <QUrl>
 
 #include <QJsonObject>
@@ -13,6 +14,8 @@
 #include <QJsonArray>
 #include <QStackedLayout>
 #include <QScopedPointer>
+#include <QSharedPointer>
+#include <QPointer>
 //#include <QThread>
 //#include <QFile>
 
@@ -72,18 +75,21 @@ private:
     ///интерфейс
     Ui::Widget *ui;
     ///менеджер интеренет подключения
-    QNetworkAccessManager * manager;
-    //QScopedPointer<QNetworkAccessManager>  manager;
+    //QNetworkAccessManager * manager;
+    QSharedPointer<QNetworkAccessManager>  manager;
     ///класс подключения к серверу вк
+    //QSharedPointer<vkConnect> vk;
     vkConnect * vk;
     ///класс хранения окон
-    QStackedLayout * l;
+    QPointer<QStackedLayout>  l;
     ///класс окна подключения
-    w_login * w_log;
+    QPointer<w_login>  w_log;
     ///класс окна чата
-    Form * form;
+    QPointer<Form> form;
     ///класс диалогового окна ошибок
-    error_dialog * errorD;
+    QPointer<error_dialog> errorD;
+
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // WIDGET_H

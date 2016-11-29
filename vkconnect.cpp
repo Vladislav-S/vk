@@ -14,7 +14,7 @@ vkConnect::vkConnect()
 }
 
 vkConnect::~vkConnect(){
-
+    manager.clear();
 }
 
 QJsonObject vkConnect::friendList(QString _id){
@@ -204,7 +204,7 @@ QString vkConnect::getUserFLName(const QString &str)
     return jobj["response"].toArray()[0].toObject()["first_name"].toString() + " " + jobj["response"].toArray()[0].toObject()["last_name"].toString();
 }
 
-int vkConnect::setManager(QNetworkAccessManager *man){
+int vkConnect::setManager(QSharedPointer<QNetworkAccessManager> man){
     manager = man;
     return 1;
 }
