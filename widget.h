@@ -75,8 +75,7 @@ private:
     ///интерфейс
     Ui::Widget *ui;
     ///менеджер интеренет подключения
-    //QNetworkAccessManager * manager;
-    QSharedPointer<QNetworkAccessManager>  manager;
+    QPointer<QNetworkAccessManager>  manager;
     ///класс подключения к серверу вк
     QSharedPointer<vkConnect> vk;
     ///класс хранения окон
@@ -88,7 +87,7 @@ private:
     ///класс диалогового окна ошибок
     QPointer<error_dialog> errorD;
 
-    void closeEvent(QCloseEvent *event);
+    //void closeEvent(QCloseEvent *event);
 };
 
 #endif // WIDGET_H

@@ -24,6 +24,7 @@ w_login::~w_login()
     if(urlq != nullptr)
         delete urlq;
     //web->deleteLater();
+    //vk.clear();
 
 }
 

@@ -45,7 +45,8 @@ Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
 Form::~Form()
 {
     delete ui;
-    delete timer;
+    //delete timer;
+    //vk.clear();
 }
 
 int Form::getW(){
@@ -69,15 +70,17 @@ void Form::ready()
 
 
     QJsonArray friendIds = friends["items"].toArray();
-
+    QJsonArray friendArray = vk->getUsers(friendIds);
     //qDebug() << QString::number(friendIds[0].toInt());
-
+    //vk->getUsers(friendIds);
+    qDebug() << friendArray;
     for(int i = 0; i < count; i++){
         QString FLName;
-        FLName = vk->getUserFLName(QString::number(friendIds[i].toInt()));
+        //FLName = vk->getUserFLName(QString::number(friendIds[i].toInt()));
+        FLName = friendArray[i].toObject()["first_name"].toString() + " " +friendArray[i].toObject()["last_name"].toString();
         ui->l_contacts->addItem(FLName);
 
-        QString statusTip = QString::number(friendIds[i].toInt());
+        QString statusTip = QString::number(friendArray[i].toObject()["id"].toInt());
         ui->l_contacts->item(i)->setStatusTip(statusTip);
         progress++;
         ui->progressBar->setValue(progress);

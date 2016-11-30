@@ -7,6 +7,7 @@
 #include <QTime>
 #include <QTimer>
 #include <QtWebEngineWidgets>
+#include <QPointer>
 #include "vkconnect.h"
 
 namespace Ui {
@@ -51,7 +52,7 @@ private:
     QString currentDiaolg;
     QString lastMsgID;
 
-    QTimer * timer;
+    QPointer<QTimer> timer;
 
 };
 

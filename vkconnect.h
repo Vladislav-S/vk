@@ -18,6 +18,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QSharedPointer>
+#include <QPointer>
 #include <QLabel>
 
 class vkConnect: public QObject
@@ -37,7 +38,7 @@ public:
     bool setOnline();
 
     int setUsername(QString name);
-    int setManager(QSharedPointer<QNetworkAccessManager> man);
+    int setManager(QPointer<QNetworkAccessManager> man);
     int sendMsg(const QString &_msg, const QString &_id);
 
     ///получить id пользователя
@@ -56,6 +57,7 @@ public:
     void getUserInfo(QString _id, QLabel *_label);
     ///получить ИМЯ ФАМИЛИЮ пользователя
     QString getUserFLName(const QString &name);
+    QJsonArray getUsers(const QJsonArray &_ids);
 
 signals:
     ///сообщить об ошибке
@@ -67,8 +69,8 @@ public slots:
 private:
     bool connected;
     int msgShowCount;
-    QSharedPointer<QNetworkAccessManager> manager;
-
+    QPointer<QNetworkAccessManager> manager;
+    //QNetworkAccessManager * manager;
     QString apiProtocol;
     QString version;
     QString expires_in;

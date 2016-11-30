@@ -14,7 +14,7 @@ vkConnect::vkConnect()
 }
 
 vkConnect::~vkConnect(){
-    manager.clear();
+    //manager.clear();
 }
 
 QJsonObject vkConnect::friendList(QString _id){
@@ -204,7 +204,23 @@ QString vkConnect::getUserFLName(const QString &str)
     return jobj["response"].toArray()[0].toObject()["first_name"].toString() + " " + jobj["response"].toArray()[0].toObject()["last_name"].toString();
 }
 
-int vkConnect::setManager(QSharedPointer<QNetworkAccessManager> man){
+QJsonArray vkConnect::getUsers(const QJsonArray &_ids)
+{
+    QString method = "users.get";
+    QString _idsStr;
+    for(int i{0}; i < _ids.size(); i++){
+        if(i != 0) _idsStr += ",";
+        _idsStr += QString::number(_ids[i].toInt());
+    }
+    //qDebug() << "idsStr:" <<_idsStr;
+    QString requestStr = QString("%1%2?user_ids=%3&v=%4").arg(apiProtocol, method, _idsStr, version);
+    QJsonObject jobj =  sentRequest(requestStr);
+    //qDebug() << jobj;
+    return jobj["response"].toArray();
+
+}
+
+int vkConnect::setManager(QPointer<QNetworkAccessManager> man){
     manager = man;
     return 1;
 }

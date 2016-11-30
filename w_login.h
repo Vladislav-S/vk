@@ -10,6 +10,7 @@
 #include <QUrlQuery>
 #include <QString>
 #include <QCheckBox>
+#include <QPointer>
 
 #include "vkconnect.h"
 

@@ -12,7 +12,7 @@ Widget::Widget(QWidget *parent) :
     //инициализируем менеджер доступа к сети
     //manager = new QNetworkAccessManager(this);
     //manager.reset(new QNetworkAccessManager(this));
-    manager =  QSharedPointer<QNetworkAccessManager>(new QNetworkAccessManager(this));
+    manager =  new QNetworkAccessManager(this);
     //инициализируем класс подключения к серверу вк
     vk =  QSharedPointer<vkConnect>(new vkConnect());
     vk->setManager(manager);
@@ -66,22 +66,21 @@ void Widget::on_content_resized(const int &_width, const int &_height)
     this->resize(_width, _height);
 }
 
-void Widget::closeEvent(QCloseEvent *event)
-{
-    w_log->close();
-    form->close();
-    QWidget::closeEvent(event);
-}
+//void Widget::closeEvent(QCloseEvent *event)
+//{
+//    //w_log->close();
+//    //form->close();
+//    QWidget::closeEvent(event);
+//}
 
 Widget::~Widget()
 {
     delete ui;
-    //delete manager;
-    //delete vk;
-    vk.clear();
-    l.clear();
-    delete w_log;
-    delete form;
-    if(errorD != nullptr)
-        delete errorD;
+    //vk.clear();
+    //l.clear();
+    //w_log.clear();
+    //form.clear();
+    //if(errorD != nullptr)
+    //    delete errorD;
+    //manager.clear();
 }
