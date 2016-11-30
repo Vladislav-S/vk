@@ -21,11 +21,6 @@ w_login::w_login(QWidget *parent, QSharedPointer<vkConnect> _vk) :
 w_login::~w_login()
 {
     delete ui;
-    if(urlq != nullptr)
-        delete urlq;
-    //web->deleteLater();
-    //vk.clear();
-
 }
 
 
@@ -38,7 +33,6 @@ void w_login::urlChanged(const QUrl & _url)
         web->deleteLater();
         QString str = _url.toString().replace("#", "?");
         QUrl nurl(str);
-        urlq = new QUrlQuery(_url);
         QUrlQuery querry(nurl);
 
         emit sentQUrl(&querry); //отправить данные в vk

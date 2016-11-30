@@ -10,8 +10,6 @@ Widget::Widget(QWidget *parent) :
     currentIndex = 0;
 
     //инициализируем менеджер доступа к сети
-    //manager = new QNetworkAccessManager(this);
-    //manager.reset(new QNetworkAccessManager(this));
     manager =  new QNetworkAccessManager(this);
     //инициализируем класс подключения к серверу вк
     vk =  QSharedPointer<vkConnect>(new vkConnect());
@@ -38,6 +36,12 @@ Widget::Widget(QWidget *parent) :
 
 }
 
+Widget::~Widget()
+{
+    delete ui;
+    vk.clear();
+}
+
 //в случае успешного подключения отображает сообщает окну чата о готовности, окно затем отображается
 void Widget::on_login(){
 
@@ -57,7 +61,6 @@ void Widget::on_error(const QString &string)
     connect(errorD, SIGNAL(on_ok()), this, SLOT(close()));
 
     errorD->exec();
-    //QThread::sleep(100000);
 }
 
 //сигнал - когда изменен размер окна
@@ -66,21 +69,4 @@ void Widget::on_content_resized(const int &_width, const int &_height)
     this->resize(_width, _height);
 }
 
-//void Widget::closeEvent(QCloseEvent *event)
-//{
-//    //w_log->close();
-//    //form->close();
-//    QWidget::closeEvent(event);
-//}
 
-Widget::~Widget()
-{
-    delete ui;
-    //vk.clear();
-    //l.clear();
-    //w_log.clear();
-    //form.clear();
-    //if(errorD != nullptr)
-    //    delete errorD;
-    //manager.clear();
-}

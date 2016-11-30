@@ -17,7 +17,6 @@ Form::Form(QWidget *parent) :
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(checkNewMsg()));
 
-   // ui->t_edit->keyPressEvent();
 }
 
 Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
@@ -28,7 +27,6 @@ Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
     vk = _vk;
     w = this->width();
     h = this->height();
-    //ui->progressBar->setMaximum();
 
     ui->t_edit->setPB(ui->b_sent);
 
@@ -71,12 +69,9 @@ void Form::ready()
 
     QJsonArray friendIds = friends["items"].toArray();
     QJsonArray friendArray = vk->getUsers(friendIds);
-    //qDebug() << QString::number(friendIds[0].toInt());
-    //vk->getUsers(friendIds);
     qDebug() << friendArray;
     for(int i = 0; i < count; i++){
         QString FLName;
-        //FLName = vk->getUserFLName(QString::number(friendIds[i].toInt()));
         FLName = friendArray[i].toObject()["first_name"].toString() + " " +friendArray[i].toObject()["last_name"].toString();
         ui->l_contacts->addItem(FLName);
 
@@ -84,24 +79,19 @@ void Form::ready()
         ui->l_contacts->item(i)->setStatusTip(statusTip);
         progress++;
         ui->progressBar->setValue(progress);
-        //qDebug() << ui->l_contacts->item(i)->statusTip();
     }
 
     //TODO: получение последних 10 сообщений и хранение их в контейнере
     lastMessages = vk->lastMessages();
-    //qDebug() << lastMessages;
     lastMsgID = QString::number(lastMessages["response"].toObject()["items"].toArray()[0].toObject()["id"].toInt());
-    //qDebug() <<  lastMsgID;
 
-    timer->start(7000);
+    timer->start(4000);
 
 
 }
 
 void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
 {
-    //ui->t_view->setText(item->statusTip());
-    //ui->t_view->clear();
     currentDiaolg.clear();
     QJsonObject obj =  vk->dialogHistory(item->statusTip());
     QJsonArray msgArray = obj["items"].toArray();
@@ -146,9 +136,7 @@ void Form::checkNewMsg()
 {
 
     lastMessages = vk->lastMessages(lastMsgID);
-    //qDebug() << vk->hasNewMsgs(lastMessages);
     if(!vk->hasNewMsgs(lastMessages)) return;
-    //qDebug() << lastMessages;
 
     QJsonArray array = lastMessages["response"].toObject()["items"].toArray();
     lastMsgID = QString::number(array[0].toObject()["id"].toInt());
@@ -157,7 +145,6 @@ void Form::checkNewMsg()
     for(int i = 0; i < array.size(); i++){
         item = serchById(QString::number(array[i].toObject()["user_id"].toInt()));
         emit ui->l_contacts->itemActivated(item);
-        //qDebug() << item->text();
     }
 
 }

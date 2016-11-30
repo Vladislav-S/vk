@@ -13,11 +13,8 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QStackedLayout>
-#include <QScopedPointer>
 #include <QSharedPointer>
 #include <QPointer>
-//#include <QThread>
-//#include <QFile>
 
 #include "vkconnect.h"
 #include "form.h"
