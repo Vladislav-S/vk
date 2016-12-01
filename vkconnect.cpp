@@ -195,13 +195,13 @@ void vkConnect::getUserInfo(QString  _id, QLabel * _label){
     //qDebug() << requestStr;
 }
 
-QString vkConnect::getUserFLName(const QString &str)
+QJsonObject vkConnect::getUser(const QString &str)
 {
     QString method = "users.get";
-    QString requestStr = QString("%1%2?user_ids=%3&v=%4").arg(apiProtocol, method, str, version);
+    QString requestStr = QString("%1%2?user_ids=%3&fileds=photo_50,city,verified&v=%4&access_token=%5").arg(apiProtocol, method, str, version, token);
     QJsonObject jobj =  sentRequest(requestStr);
     //qDebug() << jobj;
-    return jobj["response"].toArray()[0].toObject()["first_name"].toString() + " " + jobj["response"].toArray()[0].toObject()["last_name"].toString();
+    return jobj;
 }
 
 QJsonArray vkConnect::getUsers(const QJsonArray &_ids)

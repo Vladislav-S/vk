@@ -17,6 +17,7 @@ Form::Form(QWidget *parent) :
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(checkNewMsg()));
 
+
 }
 
 Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
@@ -36,6 +37,47 @@ Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(checkNewMsg()));
 
+    //ui->chat->page()->setScrollBar
+
+    //--------BASIC---------
+    QFile fbhtml(":/basichtml.html");
+    if (!fbhtml.open(QIODevice::ReadOnly | QIODevice::Text))
+                return;
+    QByteArray barray = fbhtml.readAll();
+    basicHTML = QString::fromUtf8(barray);
+    fbhtml.close();
+
+    //------STYLE--------
+    QFile fStyle(":/style.css");
+    if (!fStyle.open(QIODevice::ReadOnly | QIODevice::Text))
+                return;
+    barray = fStyle.readAll();
+    CSS = QString::fromUtf8(barray);
+    fStyle.close();
+
+    //------MENU-------
+    QFile fMenu(":/menu.html");
+    if (!fMenu.open(QIODevice::ReadOnly | QIODevice::Text))
+                return;
+    barray = fMenu.readAll();
+    chatMenu = QString::fromUtf8(barray);
+    fMenu.close();
+
+    //-----OTHER-------
+    QFile fOther(":/other.html");
+    if (!fOther.open(QIODevice::ReadOnly | QIODevice::Text))
+                return;
+    barray = fOther.readAll();
+    chatOther = QString::fromUtf8(barray);
+    fOther.close();
+
+    //------SELF-------
+    QFile fSelf(":/self.html");
+    if (!fSelf.open(QIODevice::ReadOnly | QIODevice::Text))
+                return;
+    barray = fSelf.readAll();
+    chatSelf = QString::fromUtf8(barray);
+    fSelf.close();
 
 }
 
@@ -43,8 +85,7 @@ Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
 Form::~Form()
 {
     delete ui;
-    //delete timer;
-    //vk.clear();
+    delete timer;
 }
 
 int Form::getW(){
@@ -69,7 +110,7 @@ void Form::ready()
 
     QJsonArray friendIds = friends["items"].toArray();
     QJsonArray friendArray = vk->getUsers(friendIds);
-    qDebug() << friendArray;
+    //qDebug() << friendArray;
     for(int i = 0; i < count; i++){
         QString FLName;
         FLName = friendArray[i].toObject()["first_name"].toString() + " " +friendArray[i].toObject()["last_name"].toString();
@@ -85,6 +126,7 @@ void Form::ready()
     lastMessages = vk->lastMessages();
     lastMsgID = QString::number(lastMessages["response"].toObject()["items"].toArray()[0].toObject()["id"].toInt());
 
+
     timer->start(4000);
 
 
@@ -93,24 +135,39 @@ void Form::ready()
 void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
 {
     currentDiaolg.clear();
+    chatMiddle.clear();
     QJsonObject obj =  vk->dialogHistory(item->statusTip());
     QJsonArray msgArray = obj["items"].toArray();
 
+    qDebug() << vk->getUser(ui->l_contacts->currentItem()->statusTip());
     int out;
     QString delimetr = "------------------------\n";
     QString from = item->text();
     QString body;
-    for(int i = 0; i < msgArray.size(); i++){
+
+    for(int i = msgArray.size()-1; i > -1 ; i--){
         body = msgArray[i].toObject()["body"].toString();
         currentDiaolg += delimetr;
         out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
-        if(!out) currentDiaolg += "from " + from + "\n";// + delimetr;
-        else currentDiaolg += "my\n";//+delimetr;
+        if(!out) {
+            currentDiaolg += "from " + from + "\n";// + delimetr;
+            chatMiddle += chatOther.arg(body, "time");
+
+        }
+        else {
+            currentDiaolg += "my\n";//+delimetr;
+            chatMiddle += chatSelf.arg(body, "time");
+        }
 
         currentDiaolg += body + "\n";
-    }
-    ui->t_view->setText(currentDiaolg);
 
+
+    }
+//    ui->t_view->setText(currentDiaolg);
+    //qDebug() << chatHTML;
+    chatHTML = basicHTML.arg(CSS, chatMenu.arg(from, "", chatMiddle));
+    ui->chat->setHTML(chatHTML);
+    //ui->chat->setHTML(t2HTML);
 }
 
 void Form::on_b_sent_clicked()
@@ -124,6 +181,10 @@ void Form::on_b_sent_clicked()
     ui->t_view->setText(currentDiaolg);
 
     ui->t_edit->clear();
+
+    int index = chatHTML.indexOf("</ol>");
+    ui->chat->setHTML(chatHTML.insert(index, chatSelf.arg(msg, "time")));
+
 
 }
 

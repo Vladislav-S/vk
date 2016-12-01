@@ -18,14 +18,16 @@ SOURCES += main.cpp\
     form.cpp \
     w_login.cpp \
     myqtextedit.cpp \
-    error_dialog.cpp
+    error_dialog.cpp \
+    chat.cpp
 
 HEADERS  += widget.h \
     vkconnect.h \
     form.h \
     w_login.h \
     myqtextedit.h \
-    error_dialog.h
+    error_dialog.h \
+    chat.h
 
 FORMS    += widget.ui \
     form.ui \
@@ -33,4 +35,7 @@ FORMS    += widget.ui \
     myqtextedit.ui \
     error_dialog.ui
 
-RESOURCES +=
+RESOURCES += \
+    res.qrc
+
+DISTFILES +=

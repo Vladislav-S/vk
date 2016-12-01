@@ -56,7 +56,7 @@ public:
     ///получить информацию о пользователе и забить его имя в лейбл
     void getUserInfo(QString _id, QLabel *_label);
     ///получить ИМЯ ФАМИЛИЮ пользователя
-    QString getUserFLName(const QString &name);
+    QJsonObject getUser(const QString &name);
     QJsonArray getUsers(const QJsonArray &_ids);
 
 signals:

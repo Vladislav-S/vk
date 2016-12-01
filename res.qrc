@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>style.css</file>
+        <file>basichtml.html</file>
+        <file>menu.html</file>
+        <file>other.html</file>
+        <file>self.html</file>
+    </qresource>
+</RCC>

@@ -2,12 +2,17 @@
 #define FORM_H
 
 #include <QWidget>
+#include <QListWidget>
 #include <QListWidgetItem>
 #include <QKeyEvent>
 #include <QTime>
 #include <QTimer>
 #include <QtWebEngineWidgets>
+#include <QWebEngineView>
+#include <QWebEnginePage>
+
 #include <QPointer>
+#include <QFile>
 #include "vkconnect.h"
 
 namespace Ui {
@@ -43,6 +48,7 @@ private:
     QListWidgetItem * serchById(const QString & id);
 
     Ui::Form *ui;
+    //QPointer<MessageArea> mArea;
     QSharedPointer<vkConnect> vk;
 
     int w;
@@ -51,8 +57,18 @@ private:
     QJsonObject lastMessages;
     QString currentDiaolg;
     QString lastMsgID;
-
+    QString basicHTML;
+    QString CSS;
+    QString chatMenu;
+    QString chatOther;
+    QString chatSelf;
+    QString chatHTML;
+    QString chatMiddle;
     QPointer<QTimer> timer;
+
+    QString photoOther;
+
+
 
 };
 
