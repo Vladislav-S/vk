@@ -138,53 +138,54 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
     chatMiddle.clear();
     QJsonObject obj =  vk->dialogHistory(item->statusTip());
     QJsonArray msgArray = obj["items"].toArray();
+    QString time;
+    QString photo_130 = "<img src=\"%1\" alt=\"\">";
+    QJsonObject other = vk->getUser(ui->l_contacts->currentItem()->statusTip());
 
-    qDebug() << vk->getUser(ui->l_contacts->currentItem()->statusTip());
+    //qDebug() << msgArray;
     int out;
-    QString delimetr = "------------------------\n";
     QString from = item->text();
     QString body;
 
     for(int i = msgArray.size()-1; i > -1 ; i--){
+        QString photo;
+        if(!msgArray[i].toObject()["photo_130"].toString().isEmpty())
+            photo = photo_130.arg(msgArray[i].toObject()["photo_130"].toString());
+        qDebug() << photo;
         body = msgArray[i].toObject()["body"].toString();
-        currentDiaolg += delimetr;
+
+        time = QDateTime::fromTime_t(msgArray[i].toObject()["date"].toInt()).toString();
+        //qDebug() << time;
         out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
         if(!out) {
-            currentDiaolg += "from " + from + "\n";// + delimetr;
-            chatMiddle += chatOther.arg(body, "time");
-
+            chatMiddle += chatOther.arg(body, time, other["photo_50"].toString(), photo);
         }
         else {
-            currentDiaolg += "my\n";//+delimetr;
-            chatMiddle += chatSelf.arg(body, "time");
+            chatMiddle += chatSelf.arg(body, time, vk->getUserPhoto50(), photo);
+
         }
 
-        currentDiaolg += body + "\n";
 
 
     }
-//    ui->t_view->setText(currentDiaolg);
-    //qDebug() << chatHTML;
     chatHTML = basicHTML.arg(CSS, chatMenu.arg(from, "", chatMiddle));
     ui->chat->setHTML(chatHTML);
-    //ui->chat->setHTML(t2HTML);
 }
 
 void Form::on_b_sent_clicked()
 {
+    QString jsScript = "document.getElementsByClassName('chat').innerHTML = \"%1\"";
     QString msg = ui->t_edit->toPlainText();
+    //jsScript = jsScript.arg(chatSelf.arg(msg, QDateTime(QDateTime::currentDateTime()).toString(), vk->getUserPhoto50()));
+
     vk->sendMsg(msg, ui->l_contacts->currentItem()->statusTip());
-
-    QString delimetr = "------------------------\n";
-    currentDiaolg = delimetr + "my\n" + msg + "\n" + currentDiaolg;
-
-    ui->t_view->setText(currentDiaolg);
 
     ui->t_edit->clear();
 
     int index = chatHTML.indexOf("</ol>");
-    ui->chat->setHTML(chatHTML.insert(index, chatSelf.arg(msg, "time")));
+    ui->chat->setHTML(chatHTML.insert(index, chatSelf.arg(msg, QDateTime(QDateTime::currentDateTime()).toString(), vk->getUserPhoto50(), "")));
 
+    //ui->chat->page()->runJavaScript(jsScript, );
 
 }
 

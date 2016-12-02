@@ -10,6 +10,7 @@
 #include <QtWebEngineWidgets>
 #include <QWebEngineView>
 #include <QWebEnginePage>
+#include <QDateTime>
 
 #include <QPointer>
 #include <QFile>

@@ -64,6 +64,8 @@ void vkConnect::acceptLogin(QUrlQuery *query){
  id = (query->queryItemValue("user_id"));
  expires_in = (query->queryItemValue("expires_in"));
  connected = true;
+ QJsonObject user_data = getUser(id);
+ photo_50 = user_data["photo_50"].toString();
  //TODO: emit signal to widget, to give info
 }
 
@@ -132,6 +134,11 @@ QString  vkConnect::getUserId(){
     return id;
 }
 
+QString vkConnect::getUserPhoto50()
+{
+    return photo_50;
+}
+
 
 
 QJsonObject vkConnect::sentRequest(const QString &in){
@@ -198,10 +205,10 @@ void vkConnect::getUserInfo(QString  _id, QLabel * _label){
 QJsonObject vkConnect::getUser(const QString &str)
 {
     QString method = "users.get";
-    QString requestStr = QString("%1%2?user_ids=%3&fileds=photo_50,city,verified&v=%4&access_token=%5").arg(apiProtocol, method, str, version, token);
+    QString requestStr = QString("%1%2?user_ids=%3&fields=photo_50,city,verified&v=%4&access_token=%5").arg(apiProtocol, method, str, version, token);
     QJsonObject jobj =  sentRequest(requestStr);
     //qDebug() << jobj;
-    return jobj;
+    return jobj["response"].toArray()[0].toObject();
 }
 
 QJsonArray vkConnect::getUsers(const QJsonArray &_ids)

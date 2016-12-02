@@ -43,6 +43,8 @@ public:
 
     ///получить id пользователя
     QString getUserId();
+    ///получить ссылку на фото
+    QString getUserPhoto50();
     ///получить друзей онлайн
     QJsonObject friendsOnline();
     ///получить список друзей
@@ -78,6 +80,7 @@ private:
     QString id;
     QString username;
     QString token;
+    QString photo_50;
 
     ///получить QJsonObject из строки
     QJsonObject ObjectFromString(const QString& in);
