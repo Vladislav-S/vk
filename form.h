@@ -15,6 +15,7 @@
 #include <QPointer>
 #include <QFile>
 #include "vkconnect.h"
+#include <crypt.h>
 
 namespace Ui {
 class Form;
@@ -69,6 +70,7 @@ private:
 
     QString photoOther;
 
+    crypt * cr;
 
 
 };

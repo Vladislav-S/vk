@@ -79,6 +79,9 @@ Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
     chatSelf = QString::fromUtf8(barray);
     fSelf.close();
 
+    //-------CRYPT-------
+    cr = new crypt();
+
 }
 
 
@@ -86,6 +89,7 @@ Form::~Form()
 {
     delete ui;
     delete timer;
+    delete cr;
 }
 
 int Form::getW(){
@@ -153,10 +157,27 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
             photo = photo_130.arg(msgArray[i].toObject()["photo_130"].toString());
         qDebug() << photo;
         body = msgArray[i].toObject()["body"].toString();
+        out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
+
+        if(body.indexOf("--dec") != -1){
+            qDebug() << "decodeing...";
+            body = body.remove("--dec");
+            std::string str;
+            if(out == 1){
+                //если я отослал, то ключ - ид получателя
+                str = cr->genKey(ui->l_contacts->currentItem()->statusTip());
+            }
+            else{
+                str = cr->genKey(vk->getUserId());
+            }
+            qDebug() << QString(str.c_str());
+            std::string decrStr = cr->myCrypt(body.toStdString(), str, str, false);
+            body = QString(decrStr.c_str());
+            qDebug() << body;
+        }
 
         time = QDateTime::fromTime_t(msgArray[i].toObject()["date"].toInt()).toString();
         //qDebug() << time;
-        out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
         if(!out) {
             chatMiddle += chatOther.arg(body, time, other["photo_50"].toString(), photo);
         }
@@ -174,16 +195,25 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
 
 void Form::on_b_sent_clicked()
 {
-    QString jsScript = "document.getElementsByClassName('chat').innerHTML = \"%1\"";
+    QString other_id = ui->l_contacts->currentItem()->statusTip();
+    //QString jsScript = "document.getElementsByClassName('chat').innerHTML = \"%1\"";
     QString msg = ui->t_edit->toPlainText();
+    QString msgView = msg;
     //jsScript = jsScript.arg(chatSelf.arg(msg, QDateTime(QDateTime::currentDateTime()).toString(), vk->getUserPhoto50()));
+    if(ui->chb_encode->checkState() == Qt::Checked){
+        std::string str = cr->genKey(other_id);
+        std::string encrStr = cr->myCrypt(msg.toStdString(), str, str, true);
+        msg = QString("--dec") + QString(encrStr.c_str());
+        //std::string decrStr = cr->myCrypt(encrStr, str, str, false);
+        //qDebug() << QString(decrStr.c_str());
 
-    vk->sendMsg(msg, ui->l_contacts->currentItem()->statusTip());
+    }
+    vk->sendMsg(msg, other_id);
 
     ui->t_edit->clear();
 
     int index = chatHTML.indexOf("</ol>");
-    ui->chat->setHTML(chatHTML.insert(index, chatSelf.arg(msg, QDateTime(QDateTime::currentDateTime()).toString(), vk->getUserPhoto50(), "")));
+    ui->chat->setHTML(chatHTML.insert(index, chatSelf.arg(msgView, QDateTime(QDateTime::currentDateTime()).toString(), vk->getUserPhoto50(), "")));
 
     //ui->chat->page()->runJavaScript(jsScript, );
 

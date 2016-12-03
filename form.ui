@@ -85,6 +85,19 @@
     <cursorShape>ArrowCursor</cursorShape>
    </property>
   </widget>
+  <widget class="QCheckBox" name="chb_encode">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>340</y>
+     <width>101</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>encode</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
