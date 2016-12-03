@@ -24,7 +24,7 @@ error_dialog::~error_dialog()
 
 void error_dialog::on_pushButton_clicked()
 {
-    emit on_ok();
+    emit on_ok(); // QDialog сам моет испускать finished при любом завершении его работы
 }
 
 void error_dialog::on_error_dialog_destroyed()

@@ -29,6 +29,7 @@ class w_login : public QWidget
 
 public:
     explicit w_login(QWidget *parent = 0);
+    // обычно parent последний, тогда не требуется указывать значение по умолчанию для других параметров
     w_login(QWidget *parent = 0, QSharedPointer<vkConnect> _vk = QSharedPointer<vkConnect>());
     ~w_login();
 
@@ -50,7 +51,7 @@ private:
     QSharedPointer<vkConnect> vk;
 
     ///для отображения веб страницы логинизации
-    QWebEngineView * web;
+    QWebEngineView * web; // подозреваю, эту штуку статически прилинковать будет проблематично
 
 };
 

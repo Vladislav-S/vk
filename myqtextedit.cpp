@@ -13,7 +13,7 @@ void myQTextEdit::setPB(QPushButton *_pb)
 }
 
 myQTextEdit::~myQTextEdit()
-{
+{ // ui утек
 }
 
 void myQTextEdit::keyPressEvent(QKeyEvent *event)

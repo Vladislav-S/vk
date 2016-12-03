@@ -22,7 +22,7 @@ public slots:
 
 private:
     QWebEngineView * chatW;
-    QString html;
+    QString html; // это поле точно нужно?
 };
 
 #endif // CHAT_H

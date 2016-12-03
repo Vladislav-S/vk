@@ -1,4 +1,4 @@
-#include "messagearea.h"
+#include "messagearea.h" // потерялся файл?
 #include "ui_messagearea.h"
 
 MessageArea::MessageArea(QWidget *parent) :
