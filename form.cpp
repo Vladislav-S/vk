@@ -1,24 +1,6 @@
 #include "form.h"
 #include "ui_form.h"
 
-Form::Form(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Form)
-{
-    ui->setupUi(this);
-    w = this->width();
-    h = this->height();
-
-    ui->l_contacts->setMouseTracking(true);
-
-    ui->progressBar->setMinimum(0);
-    ui->progressBar->setValue(0);
-
-    timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(checkNewMsg()));
-
-
-}
 
 Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
     QWidget(parent),
@@ -185,7 +167,7 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
                 //qDebug() << "body" <<body;
             }
         }
-        catch(std::exception &ex){
+        catch(const std::exception &ex){
             qDebug() << QString(ex.what());
         }
         catch(...){
@@ -225,7 +207,7 @@ void Form::on_b_sent_clicked()
 
         }
     }
-    catch(std::exception &ex){
+    catch(const std::exception &ex){
         qDebug() << QString(ex.what());
     }
     catch(...){
@@ -251,6 +233,7 @@ void Form::checkNewMsg()
     lastMessages = vk->lastMessages(lastMsgID);
     if(!vk->hasNewMsgs(lastMessages)) return;
 
+    //корректность json ответа проверяется в классе vkConnect
     QJsonArray array = lastMessages["response"].toObject()["items"].toArray();
     lastMsgID = QString::number(array[0].toObject()["id"].toInt());
 
@@ -266,11 +249,11 @@ void Form::checkNewMsg()
     }
 }
 
-QListWidgetItem * Form::serchById(const QString &id)
-{
-    int number = ui->l_contacts->count();
-    for(int i{0}; i < number; i++){
-        if(ui->l_contacts->item(i)->statusTip() == id) return ui->l_contacts->item(i);
-    }
-    return Q_NULLPTR;
-}
+//QListWidgetItem * Form::serchById(const QString &id)
+//{
+//    int number = ui->l_contacts->count();
+//    for(int i{0}; i < number; i++){
+//        if(ui->l_contacts->item(i)->statusTip() == id) return ui->l_contacts->item(i);
+//    }
+//    return Q_NULLPTR;
+//}

@@ -14,6 +14,7 @@ void myQTextEdit::setPB(QPushButton *_pb)
 
 myQTextEdit::~myQTextEdit()
 {
+    delete ui;
 }
 
 void myQTextEdit::keyPressEvent(QKeyEvent *event)

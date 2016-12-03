@@ -26,10 +26,10 @@ class Form : public QWidget
     Q_OBJECT
 
 public:
-    explicit Form(QWidget *parent = 0);
     Form(QWidget *parent = 0, QSharedPointer<vkConnect> _vk = QSharedPointer<vkConnect>());
     ~Form();
 
+    //методы нужны для получения родных размеров окна, а не присвоенных после инициализации
     int getW();
     int getH();
 
@@ -47,7 +47,7 @@ private slots:
     void checkNewMsg();
 
 private:
-    QListWidgetItem * serchById(const QString & id);
+    //QListWidgetItem * serchById(const QString & id);
 
     Ui::Form *ui;
     //QPointer<MessageArea> mArea;

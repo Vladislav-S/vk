@@ -61,7 +61,7 @@ public slots:
      *
      * слот принимает сигналы на изменение размеров главного окна
      */
-    void on_content_resized(const int &_width, const int &_height);
+    void on_content_resized(int _width, int _height);
 
 signals:
     ///Сигнал. Испускается в случае готовности передачи данных дочернему окну (form)
