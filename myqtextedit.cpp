@@ -24,6 +24,7 @@ void myQTextEdit::keyPressEvent(QKeyEvent *event)
             //qDebug() << "entered";
 
         emit pb->clicked();
+        setFocus(Qt::OtherFocusReason);
         default:
           QTextEdit::keyPressEvent(event);
       }

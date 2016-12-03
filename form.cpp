@@ -138,7 +138,7 @@ void Form::ready()
 void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
 {
     currentItem = item;
-    qDebug() << "status tip: " <<item->statusTip();
+    //qDebug() << "status tip: " <<item->statusTip();
     currentDiaolg.clear();
     chatMiddle.clear();
     QJsonObject obj =  vk->dialogHistory(item->statusTip());
@@ -161,7 +161,7 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
         out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
 
         if(body.indexOf("--dec") != -1){
-            qDebug() << "decodeing...";
+            //qDebug() << "decodeing...";
             body = body.remove("--dec");
             std::string str;
             if(out == 1){
@@ -177,7 +177,7 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
                 body = QString(decrStr.c_str());
             }
 
-            qDebug() << "body" <<body;
+            //qDebug() << "body" <<body;
         }
 
         time = QDateTime::fromTime_t(msgArray[i].toObject()["date"].toInt()).toString();
