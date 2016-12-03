@@ -138,7 +138,11 @@ void Form::ready()
 void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
 {
     currentItem = item;
-    //qDebug() << "status tip: " <<item->statusTip();
+    if(!ui->t_edit->isEnabled() && !ui->b_sent->isEnabled() && !ui->chb_encode->isEnabled()){
+        ui->t_edit->setEnabled(true);
+        ui->b_sent->setEnabled(true);
+        ui->chb_encode->setEnabled(true);
+    }
     currentDiaolg.clear();
     chatMiddle.clear();
     QJsonObject obj =  vk->dialogHistory(item->statusTip());
@@ -160,25 +164,34 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
         body = msgArray[i].toObject()["body"].toString();
         out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
 
-        if(body.indexOf("--dec") != -1){
-            //qDebug() << "decodeing...";
-            body = body.remove("--dec");
-            std::string str;
-            if(out == 1){
-                //если я отослал, то ключ - ид получателя
-                str = cr->genKey(ui->l_contacts->currentItem()->statusTip());
-            }
-            else{
-                str = cr->genKey(vk->getUserId());
-            }
-            //qDebug() << QString(str.c_str());
-            if(!body.isEmpty()){
-                std::string decrStr = cr->myCrypt(body.toStdString(), str, str, false);
-                body = QString(decrStr.c_str());
-            }
+        try{
+            if(body.indexOf("--dec") != -1){
+                //qDebug() << "decodeing...";
+                body = body.remove("--dec");
+                std::string str;
+                if(out == 1){
+                    //если я отослал, то ключ - ид получателя
+                    str = cr->genKey(ui->l_contacts->currentItem()->statusTip());
+                }
+                else{
+                    str = cr->genKey(vk->getUserId());
+                }
+                //qDebug() << QString(str.c_str());
+                if(!body.isEmpty()){
+                    std::string decrStr = cr->myCrypt(body.toStdString(), str, str, false);
+                    body = QString(decrStr.c_str());
+                }
 
-            //qDebug() << "body" <<body;
+                //qDebug() << "body" <<body;
+            }
         }
+        catch(std::exception &ex){
+            qDebug() << QString(ex.what());
+        }
+        catch(...){
+            qDebug() << "error with decode";
+        }
+
 
         time = QDateTime::fromTime_t(msgArray[i].toObject()["date"].toInt()).toString();
         if(!out) {
@@ -198,17 +211,27 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
 
 void Form::on_b_sent_clicked()
 {
-    QString other_id = ui->l_contacts->currentItem()->statusTip();
+    QString other_id = currentItem->statusTip();
     QString msg = ui->t_edit->toPlainText();
+    if(msg.isEmpty()) return;
     QString msgView = msg;
-    if(ui->chb_encode->checkState() == Qt::Checked){
-        std::string str = cr->genKey(other_id);
-        std::string encrStr = cr->myCrypt(msg.toStdString(), str, str, true);
-        msg = QString("--dec") + QString(encrStr.c_str());
-        //std::string decrStr = cr->myCrypt(encrStr, str, str, false);
-        //qDebug() << QString(decrStr.c_str());
+    try{
+        if(ui->chb_encode->checkState() == Qt::Checked){
+            std::string str = cr->genKey(other_id);
+            std::string encrStr = cr->myCrypt(msg.toStdString(), str, str, true);
+            msg = QString("--dec") + QString(encrStr.c_str());
+            //std::string decrStr = cr->myCrypt(encrStr, str, str, false);
+            //qDebug() << QString(decrStr.c_str());
 
+        }
     }
+    catch(std::exception &ex){
+        qDebug() << QString(ex.what());
+    }
+    catch(...){
+        qDebug() << "error with encode";
+    }
+
     vk->sendMsg(msg, other_id);
 
     ui->t_edit->clear();
@@ -239,6 +262,7 @@ void Form::checkNewMsg()
         }
         if(my)
             emit ui->l_contacts->itemActivated(currentItem);
+        ui->t_edit->setFocus();
     }
 }
 

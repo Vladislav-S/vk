@@ -37,6 +37,9 @@
    </property>
   </widget>
   <widget class="myQTextEdit" name="t_edit">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -47,6 +50,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="b_sent">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>740</x>
@@ -86,6 +92,9 @@
    </property>
   </widget>
   <widget class="QCheckBox" name="chb_encode">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>100</x>

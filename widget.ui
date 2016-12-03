@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Widget</string>
+   <string>vk chat v0.63</string>
   </property>
   <widget class="QLabel" name="label_current_user">
    <property name="geometry">
