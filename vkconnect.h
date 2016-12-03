@@ -72,7 +72,6 @@ private:
     bool connected;
     int msgShowCount;
     QPointer<QNetworkAccessManager> manager;
-    //QNetworkAccessManager * manager;
     QString apiProtocol;
     QString version;
     QString expires_in;

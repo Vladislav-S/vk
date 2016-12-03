@@ -90,6 +90,7 @@ Form::~Form()
     delete ui;
     delete timer;
     delete cr;
+
 }
 
 int Form::getW(){
@@ -114,7 +115,6 @@ void Form::ready()
 
     QJsonArray friendIds = friends["items"].toArray();
     QJsonArray friendArray = vk->getUsers(friendIds);
-    //qDebug() << friendArray;
     for(int i = 0; i < count; i++){
         QString FLName;
         FLName = friendArray[i].toObject()["first_name"].toString() + " " +friendArray[i].toObject()["last_name"].toString();
@@ -126,7 +126,6 @@ void Form::ready()
         ui->progressBar->setValue(progress);
     }
 
-    //TODO: получение последних 10 сообщений и хранение их в контейнере
     lastMessages = vk->lastMessages();
     lastMsgID = QString::number(lastMessages["response"].toObject()["items"].toArray()[0].toObject()["id"].toInt());
 
@@ -138,6 +137,8 @@ void Form::ready()
 
 void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
 {
+    currentItem = item;
+    qDebug() << "status tip: " <<item->statusTip();
     currentDiaolg.clear();
     chatMiddle.clear();
     QJsonObject obj =  vk->dialogHistory(item->statusTip());
@@ -155,7 +156,7 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
         QString photo;
         if(!msgArray[i].toObject()["photo_130"].toString().isEmpty())
             photo = photo_130.arg(msgArray[i].toObject()["photo_130"].toString());
-        qDebug() << photo;
+        //qDebug() << photo;
         body = msgArray[i].toObject()["body"].toString();
         out = msgArray[i].toObject()["out"].toInt(); //0 - resieved, 1-sended
 
@@ -170,14 +171,16 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
             else{
                 str = cr->genKey(vk->getUserId());
             }
-            qDebug() << QString(str.c_str());
-            std::string decrStr = cr->myCrypt(body.toStdString(), str, str, false);
-            body = QString(decrStr.c_str());
-            qDebug() << body;
+            //qDebug() << QString(str.c_str());
+            if(!body.isEmpty()){
+                std::string decrStr = cr->myCrypt(body.toStdString(), str, str, false);
+                body = QString(decrStr.c_str());
+            }
+
+            qDebug() << "body" <<body;
         }
 
         time = QDateTime::fromTime_t(msgArray[i].toObject()["date"].toInt()).toString();
-        //qDebug() << time;
         if(!out) {
             chatMiddle += chatOther.arg(body, time, other["photo_50"].toString(), photo);
         }
@@ -196,10 +199,8 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
 void Form::on_b_sent_clicked()
 {
     QString other_id = ui->l_contacts->currentItem()->statusTip();
-    //QString jsScript = "document.getElementsByClassName('chat').innerHTML = \"%1\"";
     QString msg = ui->t_edit->toPlainText();
     QString msgView = msg;
-    //jsScript = jsScript.arg(chatSelf.arg(msg, QDateTime(QDateTime::currentDateTime()).toString(), vk->getUserPhoto50()));
     if(ui->chb_encode->checkState() == Qt::Checked){
         std::string str = cr->genKey(other_id);
         std::string encrStr = cr->myCrypt(msg.toStdString(), str, str, true);
@@ -214,9 +215,6 @@ void Form::on_b_sent_clicked()
 
     int index = chatHTML.indexOf("</ol>");
     ui->chat->setHTML(chatHTML.insert(index, chatSelf.arg(msgView, QDateTime(QDateTime::currentDateTime()).toString(), vk->getUserPhoto50(), "")));
-
-    //ui->chat->page()->runJavaScript(jsScript, );
-
 }
 
 void Form::on_progressBar_valueChanged(int value)
@@ -232,13 +230,16 @@ void Form::checkNewMsg()
 
     QJsonArray array = lastMessages["response"].toObject()["items"].toArray();
     lastMsgID = QString::number(array[0].toObject()["id"].toInt());
-    QListWidgetItem * item;
 
-    for(int i = 0; i < array.size(); i++){
-        item = serchById(QString::number(array[i].toObject()["user_id"].toInt()));
-        emit ui->l_contacts->itemActivated(item);
+    if(currentItem != nullptr){
+        bool my;
+        for(int i = 0; i < array.size(); i++){
+                if(QString::number(array[i].toObject()["user_id"].toInt()) == currentItem->statusTip())
+                    my = true;
+        }
+        if(my)
+            emit ui->l_contacts->itemActivated(currentItem);
     }
-
 }
 
 QListWidgetItem * Form::serchById(const QString &id)

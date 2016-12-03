@@ -70,6 +70,7 @@ private:
 
     QString photoOther;
 
+    QListWidgetItem * currentItem;
     crypt * cr;
 
 

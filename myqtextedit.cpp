@@ -18,10 +18,10 @@ myQTextEdit::~myQTextEdit()
 
 void myQTextEdit::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << event->key();
+    //qDebug() << event->key();
     switch (event->key()) {
         case Qt::Key_Return:
-            qDebug() << "entered";
+            //qDebug() << "entered";
 
         emit pb->clicked();
         default:

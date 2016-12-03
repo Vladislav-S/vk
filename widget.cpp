@@ -55,7 +55,7 @@ void Widget::on_login(){
 //слот - держатель ошибок, в конце уничтожает главное окно
 void Widget::on_error(const QString &string)
 {
-    qDebug() << string;
+    //qDebug() << string;
     errorD = new error_dialog(this, string);
 
     connect(errorD, SIGNAL(on_ok()), this, SLOT(close()));
