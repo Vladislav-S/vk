@@ -1,7 +1,7 @@
 #include "form.h"
 #include "ui_form.h"
 
-Form::Form(QWidget *parent) :
+Form::Form(QWidget *parent) : // этот конструктор никем не зовется. Зачем он?
     QWidget(parent),
     ui(new Ui::Form)
 {
@@ -93,7 +93,7 @@ Form::~Form()
 
 }
 
-int Form::getW(){
+int Form::getW(){ // дублируются методы width, height
     return w;
 }
 
@@ -127,6 +127,8 @@ void Form::ready()
     }
 
     lastMessages = vk->lastMessages();
+    // считаю, что тут может произойти несчастье, если json будет по какой-то причине неправильно сформирован
+    // советую проверять наличие конкретных полей, перед тем как их получать
     lastMsgID = QString::number(lastMessages["response"].toObject()["items"].toArray()[0].toObject()["id"].toInt());
 
 
@@ -185,7 +187,7 @@ void Form::on_l_contacts_itemActivated(QListWidgetItem *item)
                 //qDebug() << "body" <<body;
             }
         }
-        catch(std::exception &ex){
+        catch(std::exception &ex){ // const?
             qDebug() << QString(ex.what());
         }
         catch(...){
@@ -266,6 +268,7 @@ void Form::checkNewMsg()
     }
 }
 
+// метод ниоткуда не зовется
 QListWidgetItem * Form::serchById(const QString &id)
 {
     int number = ui->l_contacts->count();

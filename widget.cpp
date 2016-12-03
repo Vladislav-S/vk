@@ -64,7 +64,7 @@ void Widget::on_error(const QString &string)
 }
 
 //сигнал - когда изменен размер окна
-void Widget::on_content_resized(const int &_width, const int &_height)
+void Widget::on_content_resized(const int &_width, const int &_height) // в передаче int по ссылке нет никакой пользы
 {
     this->resize(_width, _height);
 }
