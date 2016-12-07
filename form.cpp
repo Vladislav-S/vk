@@ -1,6 +1,7 @@
 #include "form.h"
 #include "ui_form.h"
-
+#include <QCryptographicHash>
+#include <QByteArray>
 
 Form::Form(QWidget *parent, QSharedPointer<vkConnect> _vk) :
     QWidget(parent),
@@ -195,6 +196,8 @@ void Form::on_b_sent_clicked()
 {
     QString other_id = currentItem->statusTip();
     QString msg = ui->t_edit->toPlainText();
+    QByteArray ba=other_id.toUtf8();
+    other_id=QCryptographicHash::hash(ba,QCryptographicHash::Sha256).toHex();
     if(msg.isEmpty()) return;
     QString msgView = msg;
     try{
