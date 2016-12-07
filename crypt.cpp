@@ -1,5 +1,6 @@
 #include "crypt.h"
-// err
+#include <QRegularExpression>
+
 crypt::crypt()
 {
     Botan::InitializationVector init;
@@ -30,8 +31,10 @@ std::string crypt::genKey(QString str)
 {
     int len = str.size();
     QString str_copy = str;
+    str_copy=str_copy.mid(0,16); // обрезаем строку тк хеш длинный
     for(int i = len; i < 16; ++i){
-        str_copy += "0";
+        str_copy +="с";
+        str_copy.replace(QRegularExpression("[g-zG-Z]"), "у");
     }
     qDebug() << str_copy.length();
     return str_copy.toStdString();
