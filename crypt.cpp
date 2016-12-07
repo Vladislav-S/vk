@@ -7,7 +7,7 @@ crypt::crypt()
 
 std::string crypt::myCrypt(std::string text, std::string log, std::string pas, bool mode)
 {
-    Botan::AutoSeeded_RNG rng;
+    // зачем ставить генератор рандомных чисел , если ключ и iv задаваешь с клавиатуры?
     Botan::SymmetricKey key (log+pas);
     Botan::InitializationVector iv ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"); //initialis_vector must be 16*aa
     if(mode==true){
