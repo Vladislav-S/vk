@@ -1,4 +1,5 @@
 #include "crypt.h"
+#include <QRegularExpression>
 
 crypt::crypt()
 {
@@ -7,7 +8,7 @@ crypt::crypt()
 
 std::string crypt::myCrypt(std::string text, std::string log, std::string pas, bool mode)
 {
-    Botan::AutoSeeded_RNG rng;
+    // зачем ставить генератор рандомных чисел , если ключ и iv задаваешь с клавиатуры?
     Botan::SymmetricKey key (log+pas);
     Botan::InitializationVector iv ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"); //initialis_vector must be 16*aa
     if(mode==true){
@@ -30,8 +31,10 @@ std::string crypt::genKey(QString str)
 {
     int len = str.size();
     QString str_copy = str;
+    str_copy=str_copy.mid(0,16); // обрезаем строку тк хеш длинный
     for(int i = len; i < 16; ++i){
-        str_copy += "0";
+        str_copy +="с";
+        str_copy.replace(QRegularExpression("[g-zG-Z]"), "e");
     }
     qDebug() << str_copy.length();
     return str_copy.toStdString();
