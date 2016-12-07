@@ -34,7 +34,7 @@ std::string crypt::genKey(QString str)
     str_copy=str_copy.mid(0,16); // обрезаем строку тк хеш длинный
     for(int i = len; i < 16; ++i){
         str_copy +="с";
-        str_copy.replace(QRegularExpression("[g-zG-Z]"), "у");
+        str_copy.replace(QRegularExpression("[g-zG-Z]"), "e");
     }
     qDebug() << str_copy.length();
     return str_copy.toStdString();
