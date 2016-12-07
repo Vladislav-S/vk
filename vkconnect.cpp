@@ -104,31 +104,6 @@ bool vkConnect::setOnline()
 
 }
 
-//bool vkConnect::writeToData()
-//{
-//    QJsonObject obj;
-//    obj.insert("access_token", QJsonValue(token));
-//    obj.insert("expires_in", QJsonValue(expires_in));
-//    obj.insert("user_id", QJsonValue(id));
-
-//    QJsonDocument doc(obj);
-
-//    QFile file("./userdata.txt");
-//    if (!file.open(QIODevice::WriteOnly))
-//    {
-//        qDebug() << "error";
-//        return false;
-//    }
-
-//    QTextStream out(&file);
-//    QString str("hhhhhhhhhh");
-//    out.setString(&str);
-//    out << "hjjjjjjjjj"<<QString::fromUtf8(doc.toJson(QJsonDocument::Compact)) << "\n";
-//    qDebug() << QString::fromUtf8(doc.toJson(QJsonDocument::Compact));
-//    file.close();
-//    return true;
-
-//}
 
 QString  vkConnect::getUserId(){
     return id;
@@ -152,7 +127,7 @@ QJsonObject vkConnect::sentRequest(const QString &in){
     loop.exec();
 
     if(reply->error() != QNetworkReply::NoError){
-        //qDebug() <<  reply->errorString();
+        
         emit replyError(reply->errorString());
         reply->deleteLater();
         return QJsonObject();
@@ -161,9 +136,9 @@ QJsonObject vkConnect::sentRequest(const QString &in){
 
     QString  str = QString::fromUtf8(content.data(), content.size());
 
-    //qDebug() << str << endl;
+    
     QJsonObject  jobj  =  ObjectFromString(str);
-    //qDebug() << "is reply correct?: " <<
+    
     isReplyCorrect(jobj);
     reply->deleteLater();
     return jobj;
@@ -182,7 +157,7 @@ QJsonObject vkConnect::friendsOnline(){
     QString method = "friends.getOnline";
     QString requestStr = QString("%1%2?v=%3&access_token=%4").arg(apiProtocol, method, version, token);
     QJsonObject obj = sentRequest(requestStr);
-    //qDebug() << obj;
+    
     return obj;
 
 }
